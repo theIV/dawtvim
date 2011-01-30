@@ -51,8 +51,7 @@ set autoindent
 set smarttab
 set expandtab
 
-:colorscheme peachpuff
-":colorscheme mac_classic
+:colorscheme vividchalk
 
 " window splitting mappings
 nmap <leader>v :vsplit<CR> <C-w><C-w>
