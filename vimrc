@@ -39,8 +39,8 @@ augroup myfiletypes
   au BufNewFile,BufRead *.liquid setf liquid
   au BufNewFile,BufRead *.js set ft=javascript.jquery
   au FileType ruby set omnifunc=rubycomplete#Complete
-  au FileType javascript set omnifunc=javascriptcomplete#CompleteJS
-  au FileType html set omnifunc=htmlcomplete#CompleteTags
+  au FileType javascript set ai et omnifunc=javascriptcomplete#CompleteJS
+  au FileType html set ai et omnifunc=htmlcomplete#CompleteTags
   au FileType css set omnifunc=csscomplete#CompleteCSS
 augroup END
 
