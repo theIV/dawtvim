@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
 
+# http://tammersaleh.com/posts/the-modern-vim-config-with-pathogen
+
 git_bundles = [ 
   "git://github.com/godlygeek/tabular.git",
   "git://github.com/msanders/snipmate.vim.git",
