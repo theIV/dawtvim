@@ -1374,9 +1374,9 @@ call s:command("-bar -bang -count=0 -nargs=? Gbrowse :execute s:Browse(<bang>0,<
 
 function! s:Browse(bang,line1,count,...) abort
   try
-    let rev = a:0 ? substitute(a:1,'@[[:alnum:]_-]\+$','','') : ''
-    if a:0 && a:1 =~# '@[[:alnum:]_-]\+$'
-      let remote = matchstr(a:1,'@\zs[[:alnum:]_-]\+$')
+    let rev = a:0 ? substitute(a:1,'@[[:alnum:]_-]\+\%(://.\{-\}\)\=$','','') : ''
+    if a:0 && a:1 =~# '@[[:alnum:]_-]\+\%(://.\{-\}\)\=$'
+      let remote = matchstr(a:1,'@\zs[[:alnum:]_-]\+\%(://.\{-\}\)\=$')
     elseif s:buffer().path() =~# '^\.git/refs/remotes/.'
       let remote = matchstr(s:buffer().path(),'^\.git/refs/remotes/\zs[^/]\+')
     else
@@ -1390,6 +1390,9 @@ function! s:Browse(bang,line1,count,...) abort
       endif
     endif
     let raw = s:repo().git_chomp('config','remote.'.remote.'.url')
+    if raw ==# ''
+      let raw = remote
+    endif
     let url = s:github_url(s:buffer(),raw,rev,a:line1,a:count)
     if url == ''
       let url = s:instaweb_url(s:buffer(),rev,a:count ? a:line1 : 0)
@@ -1416,7 +1419,14 @@ function! s:github_url(buffer,url,rev,line1,line2) abort
     return ''
   endif
   let root = 'http://github.com/' . repo
-  if path =~# '^\.git/refs/.'
+  if path =~# '^\.git/refs/heads/'
+    let branch = self.repo().git_chomp('config','branch.'.path[16:-1].'.merge')[11:-1]
+    if branch ==# ''
+      return root . '/tree/' . path[16:-1]
+    else
+      return root . '/tree/' . branch
+    endif
+  elseif path =~# '^\.git/refs/.'
     return root . '/tree/' . matchstr(path,'[^/]\+$')
   elseif path ==# '.git/config'
     return root . '/admin'
@@ -1428,7 +1438,11 @@ function! s:github_url(buffer,url,rev,line1,line2) abort
   elseif self.commit() =~# '^\x\{40\}$'
     let commit = self.commit()
   else
-    let commit = matchstr(self.repo().head_ref(),'[^/]\+$')
+    let local = matchstr(self.repo().head_ref(),'\<refs/heads/\zs.*')
+    let commit = self.repo().git_chomp('config','branch.'.local.'.merge')[11:-1]
+    if commit ==# ''
+      let commit = local
+    endif
   endif
   if self.type() ==# 'directory' || self.type() ==# 'tree'
     let url = s:sub(root . '/tree/' . commit . '/' . path,'/$','')
