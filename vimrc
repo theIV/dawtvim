@@ -41,6 +41,7 @@ augroup myfiletypes
   au FileType ruby,haml,eruby,yaml
   au BufNewFile,BufRead *.liquid setf liquid
   au BufNewFile,BufRead *.js set ft=javascript.jquery
+  au BufNewFile,BufRead *.as set ft=actionscript
   au FileType ruby set omnifunc=rubycomplete#Complete
   au FileType javascript set ai et omnifunc=javascriptcomplete#CompleteJS
   au FileType html set ai et omnifunc=htmlcomplete#CompleteTags
