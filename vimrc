@@ -55,7 +55,7 @@ set autoindent
 set smarttab
 set expandtab
 
-:colorscheme vividchalk
+:colorscheme ir_black
 
 " window splitting mappings
 nmap <leader>v :vsplit<CR> <C-w><C-w>
