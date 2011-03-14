@@ -21,7 +21,9 @@ git_bundles = [
   "git://github.com/vim-ruby/vim-ruby.git",
   "git://github.com/kana/vim-textobj-user",
   "git://github.com/nelstrom/vim-textobj-rubyblock",
-  "git://github.com/mileszs/ack.vim.git"
+  "git://github.com/mileszs/ack.vim.git",
+  "git://github.com/nathanaelkane/vim-indent-guides.git",
+  "git://github.com/theIV/twerth-colors.git"
 ]
 
 vim_org_scripts = [
