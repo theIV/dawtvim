@@ -4,7 +4,7 @@ filetype off
 call pathogen#helptags()
 call pathogen#runtime_append_all_bundles()
 
-set guifont=Menlo:h21
+set guifont=Menlo:h18
 
 set cursorline
 set lines=35 columns=80
