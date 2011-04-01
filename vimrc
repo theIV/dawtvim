@@ -4,8 +4,7 @@ filetype off
 call pathogen#helptags()
 call pathogen#runtime_append_all_bundles()
 
-set guifont=Inconsolata:h21
-"set guifont=SkyhookMono:h21
+set guifont=Menlo:h21
 
 set cursorline
 set lines=35 columns=80
@@ -55,7 +54,10 @@ set autoindent
 set smarttab
 set expandtab
 
-:colorscheme ir_black
+"colorscheme ir_black
+set background=light
+colorscheme solarized
+
 
 " window splitting mappings
 nmap <leader>v :vsplit<CR> <C-w><C-w>
