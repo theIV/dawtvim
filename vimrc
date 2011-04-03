@@ -4,7 +4,8 @@ filetype off
 call pathogen#helptags()
 call pathogen#runtime_append_all_bundles()
 
-set guifont=Menlo:h18
+" http://www.google.com/webfonts/family?family=Lekton&subset=latin
+set guifont=Lekton:h18
 
 set cursorline
 set lines=35 columns=80
@@ -54,8 +55,7 @@ set autoindent
 set smarttab
 set expandtab
 
-"colorscheme ir_black
-set background=light
+set background=dark
 colorscheme solarized
 
 
