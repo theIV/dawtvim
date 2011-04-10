@@ -86,3 +86,6 @@ nmap <leader>x :let _s=@/<Bar>:%s///g
 
 " Load matchit
 runtime macros/matchit.vim
+
+autocmd BufRead *_spec.rb syn keyword rubyRspec describe context it specify it_should_behave_like before after setup subject
+highlight def link rubyRspec Function
