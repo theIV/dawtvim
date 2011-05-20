@@ -24,7 +24,9 @@ git_bundles = [
   "git://github.com/mileszs/ack.vim.git",
   "git://github.com/nathanaelkane/vim-indent-guides.git",
   "git://github.com/theIV/twerth-colors.git",
-  "git://github.com/altercation/vim-colors-solarized.git"
+  "git://github.com/altercation/vim-colors-solarized.git",
+  "git://github.com/mattn/gist-vim.git",
+  "git://github.com/ervandew/supertab.git"
 ]
 
 vim_org_scripts = [
