@@ -84,6 +84,9 @@ nmap <leader>w :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar>:nohl<CR>
 " Shortcut to split up silly Fireworks lines
 nmap <leader>x :let _s=@/<Bar>:%s///g
 
+" Highlight lines longer than 80 characters
+match ErrorMsg '\%>80v.\+'
+
 " Load matchit
 runtime macros/matchit.vim
 
