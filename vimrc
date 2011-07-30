@@ -63,6 +63,9 @@ colorscheme solarized
 nmap <leader>v :vsplit<CR> <C-w><C-w>
 nmap <leader>s :split<CR> <C-w><C-w>
 
+" toggle TagBar
+nmap <leader>t :TagbarToggle<CR>
+
 " sane movement with wrap turned on
 nnoremap j gj
 nnoremap k gk
