@@ -78,6 +78,12 @@ vnoremap <Up> gk
 inoremap <Down> <C-o>gj
 inoremap <Up> <C-o>gk
 
+" NERDTree
+
+" 'wycats' style NERDTree
+let NERDTreeDirArrows = 1
+let NERDTreeMouseMode = 3
+
 " Shortcut to toggle nerd tree
 map <leader>d :execute 'NERDTreeToggle ' . getcwd()<CR>
 
