@@ -31,6 +31,7 @@ git_bundles = [
 ]
 
 vim_org_scripts = [
+  ["fuzzyfinder",     "13961",  "plugin"],
   ["minibufexpl",     "3640",   "plugin"],
   ['json',            "10853",  "syntax"],
   ["jquery",          "12107",  "syntax"],

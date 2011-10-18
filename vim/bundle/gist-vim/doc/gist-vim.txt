@@ -11,7 +11,7 @@ This is a vimscript for creating gists (http://gist.github.com)
 For the latest version please see https://github.com/mattn/gist-vim.
 
 ==============================================================================
-USAGE                                                         *gist-vim-usage* 
+USAGE                                                 *:Gist* *gist-vim-usage* 
 
 - Post current buffer to gist, using default privacy option. >
 
@@ -178,5 +178,23 @@ rtp:
   - cookies/github
 
 If you want to uninstall gist.vim, remember to also remove "cookies/github".
+
+==============================================================================
+THANKS                                                     *gist-vim-thanks*
+
+  AD7six
+  Bruno Bigras
+  c9s
+  Daniel Bretoi
+  Jeremy Michael Cantrell
+  Kien N
+  kongo2002
+  MATSUU Takuto
+  Matthew Weier O'Phinney
+  ornicar
+  Roland Schilter
+  steve
+  tyru
+  Will Gray
 
  vim:tw=78:ts=8:ft=help:norl:
