@@ -39,6 +39,10 @@ vim_org_scripts = [
   ["actionscript",    "10123",  "syntax"]
 ]
 
+exclude_bundles = [
+  'vim-colors-olauzon'
+]
+
 require 'fileutils'
 require 'open-uri'
 
@@ -47,7 +51,7 @@ bundles_dir = File.join(File.dirname(__FILE__), "bundle")
 FileUtils.cd(bundles_dir)
 
 puts "Trashing everything (lookout!)"
-Dir["*"].each {|d| FileUtils.rm_rf d }
+Dir["*"].each { |d| FileUtils.rm_rf(d) unless exclude_bundles.include?(d) }
 
 git_bundles.each do |url|
   dir = url.split('/').last.sub(/\.git$/, '')
