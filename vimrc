@@ -7,7 +7,7 @@ call pathogen#runtime_append_all_bundles()
 " http://www.google.com/webfonts/family?family=Lekton&subset=latin
 set guifont=Lekton:h18
 
-set cursorline
+" set cursorline
 set lines=35 columns=80
 set number
 set go-=T
@@ -56,7 +56,7 @@ set smarttab
 set expandtab
 
 set background=dark
-colorscheme solarized
+colorscheme aftereight
 
 
 " window splitting mappings
@@ -101,7 +101,8 @@ nmap <leader>w :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar>:nohl<CR>
 nmap <leader>x :let _s=@/<Bar>:%s///g
 
 " Highlight lines longer than 80 characters
-match ErrorMsg '\%>80v.\+'
+" match ErrorMsg '\%>80v.\+'
+set colorcolumn=81
 
 " Load matchit
 runtime macros/matchit.vim
