@@ -4,7 +4,7 @@
 " Author:      Jan Larres <jan@majutsushi.net>
 " Licence:     Vim licence
 " Website:     http://majutsushi.github.com/tagbar/
-" Version:     2.1
+" Version:     2.2
 " Note:        This plugin was heavily inspired by the 'Taglist' plugin by
 "              Yegappan Lakshmanan and uses a small amount of code from it.
 "
@@ -23,11 +23,6 @@ scriptencoding utf-8
 " Initialization {{{1
 
 " Basic init {{{2
-
-if v:version < 700
-    echomsg 'Tagbar: Vim version is too old, Tagbar requires at least 7.0'
-    finish
-endif
 
 if !exists('g:tagbar_ctags_bin')
     if executable('ctags-exuberant')
@@ -887,7 +882,11 @@ function! s:CreateAutocommands()
         autocmd BufUnload  __Tagbar__ call s:CleanUp()
         autocmd CursorHold __Tagbar__ call s:ShowPrototype()
 
-        autocmd BufEnter,CursorHold * call
+        autocmd BufWritePost *
+            \ if line('$') < g:tagbar_updateonsave_maxlines |
+                \ call s:AutoUpdate(fnamemodify(expand('<afile>'), ':p')) |
+            \ endif
+        autocmd BufEnter,CursorHold,FileType * call
                     \ s:AutoUpdate(fnamemodify(expand('<afile>'), ':p'))
         autocmd BufDelete * call
                     \ s:CleanupFileinfo(fnamemodify(expand('<afile>'), ':p'))
@@ -1074,6 +1073,7 @@ function! s:BaseTag.closeFold() dict
     elseif self.isFoldable() && !self.isFolded()
         " Tag is parent of a scope and is not folded
         let self.fileinfo.tagfolds[self.fields.kind][self.fullpath] = 1
+        let newline = self.tline
     elseif !empty(self.parent)
         " Tag is normal child, so close parent
         let parent = self.parent
@@ -1373,12 +1373,20 @@ function! s:ToggleWindow()
 endfunction
 
 " s:OpenWindow() {{{2
-function! s:OpenWindow(autoclose)
-    " If the tagbar window is already open jump to it
+function! s:OpenWindow(flags)
+    let autofocus = a:flags =~# 'f'
+    let jump      = a:flags =~# 'j'
+    let autoclose = a:flags =~# 'c'
+
+    " If the tagbar window is already open check jump flag
+    " Also set the autoclose flag if requested
     let tagbarwinnr = bufwinnr('__Tagbar__')
     if tagbarwinnr != -1
-        if winnr() != tagbarwinnr
+        if winnr() != tagbarwinnr && jump
             execute tagbarwinnr . 'wincmd w'
+            if autoclose
+                let w:autoclose = autoclose
+            endif
         endif
         return
     endif
@@ -1407,13 +1415,13 @@ function! s:OpenWindow(autoclose)
 
     let &eventignore = eventignore_save
 
-    call s:InitWindow(a:autoclose)
+    call s:InitWindow(autoclose)
 
     wincmd p
 
     " Jump back to the tagbar window if autoclose or autofocus is set. Can't
     " just stay in it since it wouldn't trigger the update event
-    if g:tagbar_autoclose || a:autoclose || g:tagbar_autofocus
+    if g:tagbar_autoclose || autofocus || g:tagbar_autofocus
         let tagbarwinnr = bufwinnr('__Tagbar__')
         execute tagbarwinnr . 'wincmd w'
     endif
@@ -1433,19 +1441,27 @@ function! s:InitWindow(autoclose)
     setlocal nowrap
     setlocal winfixwidth
     setlocal textwidth=0
+    setlocal nocursorline
+    setlocal nocursorcolumn
 
     if exists('+relativenumber')
         setlocal norelativenumber
     endif
 
     setlocal nofoldenable
+    setlocal foldcolumn=0
     " Reset fold settings in case a plugin set them globally to something
     " expensive. Apparently 'foldexpr' gets executed even if 'foldenable' is
     " off, and then for every appended line (like with :put).
     setlocal foldmethod&
     setlocal foldexpr&
 
-    setlocal statusline=%!TagbarGenerateStatusline()
+    " Earlier versions have a bug in local, evaluated statuslines
+    if v:version > 701 || (v:version == 701 && has('patch097'))
+        setlocal statusline=%!TagbarGenerateStatusline()
+    else
+        setlocal statusline=Tagbar
+    endif
 
     " Script-local variable needed since compare functions can't
     " take extra arguments
@@ -2124,9 +2140,22 @@ function! s:PrintKinds(typeinfo, fileinfo)
                 let tag.tline                 = curline
                 let a:fileinfo.tline[curline] = tag
 
+                " Print children
                 if tag.isFoldable() && !tag.isFolded()
-                    for childtag in tag.children
-                        call s:PrintTag(childtag, 1, a:fileinfo, a:typeinfo)
+                    for ckind in a:typeinfo.kinds
+                        let childtags = filter(copy(tag.children),
+                                          \ 'v:val.fields.kind ==# ckind.short')
+                        if len(childtags) > 0
+                            " Print 'kind' header of following children
+                            if !has_key(a:typeinfo.kind2scope, ckind.short)
+                                silent put ='    [' . ckind.long . ']'
+                                let a:fileinfo.tline[line('.')] = tag
+                            endif
+                            for childtag in childtags
+                                call s:PrintTag(childtag, 1,
+                                              \ a:fileinfo, a:typeinfo)
+                            endfor
+                        endif
                     endfor
                 endif
 
@@ -2192,8 +2221,21 @@ function! s:PrintTag(tag, depth, fileinfo, typeinfo)
 
     " Recursively print children
     if a:tag.isFoldable() && !a:tag.isFolded()
-        for childtag in a:tag.children
-            call s:PrintTag(childtag, a:depth + 1, a:fileinfo, a:typeinfo)
+        for ckind in a:typeinfo.kinds
+            let childtags = filter(copy(a:tag.children),
+                                 \ 'v:val.fields.kind ==# ckind.short')
+            if len(childtags) > 0
+                " Print 'kind' header of following children
+                if !has_key(a:typeinfo.kind2scope, ckind.short)
+                    silent put ='    ' . repeat(' ', a:depth * 2) .
+                              \ '[' . ckind.long . ']'
+                    let a:fileinfo.tline[line('.')] = a:tag
+                endif
+                for childtag in childtags
+                    call s:PrintTag(childtag, a:depth + 1,
+                                  \ a:fileinfo, a:typeinfo)
+                endfor
+            endif
         endfor
     endif
 endfunction
@@ -2861,7 +2903,8 @@ function! tagbar#ToggleWindow()
 endfunction
 
 function! tagbar#OpenWindow(...)
-    call s:OpenWindow(a:1)
+    let flags = a:0 > 0 ? a:1 : ''
+    call s:OpenWindow(flags)
 endfunction
 
 function! tagbar#CloseWindow()
