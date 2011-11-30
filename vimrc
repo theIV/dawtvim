@@ -16,7 +16,7 @@ set hidden
 
 " Highlight search results
 set hlsearch
-" Search as you type!
+" Search as you type
 set incsearch
 
 set wildmode=list:longest
