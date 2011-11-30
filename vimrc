@@ -25,10 +25,8 @@ set wildmode=list:longest
 set list
 " Shortcut to toggle `set list`
 nmap <leader>l :set list!<CR>
-" Use the same symbols as TextMate for tabstops and EOLs
-set listchars=tab:▸\ ,eol:¬
 " These are pretty cute
-set lcs=tab:│┈,trail:·,extends:>,precedes:<,nbsp:&
+set lcs=tab:│┈,trail:·,tab:▸\ ,eol:¬,extends:>,precedes:<,nbsp:&
 
 :syntax on
 
