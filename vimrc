@@ -87,8 +87,6 @@ nnoremap ,f :FufFileWithCurrentBufferDir
 nnoremap ,b :FufBuffer
 nnoremap ,t :FufTaggedFile
 
-"!ctags -R --extra=+f .
-
 " Shortcut to toggle nerd tree
 noremap <leader>d :execute 'NERDTreeToggle ' . getcwd()<CR>
 
@@ -98,8 +96,7 @@ nnoremap <leader>w :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar>:nohl<CR>
 " Shortcut to split up silly Fireworks lines
 nnoremap <leader>x :let _s=@/<Bar>:%s///g
 
-" Highlight lines longer than 80 characters
-" match ErrorMsg '\%>80v.\+'
+" Set column so we know when we've reached 80 characters on a line
 set colorcolumn=81
 
 " Load matchit
