@@ -24,7 +24,7 @@ set wildmode=list:longest
 " Show invisible characters
 set list
 " Shortcut to toggle `set list`
-nmap <leader>l :set list!<CR>
+nnoremap <leader>l :set list!<CR>
 " These are pretty cute
 set lcs=tab:│┈,trail:·,tab:▸\ ,eol:¬,extends:>,precedes:<,nbsp:&
 
@@ -58,11 +58,11 @@ colorscheme aftereight
 
 
 " window splitting mappings
-nmap <leader>v :vsplit<CR> <C-w><C-w>
-nmap <leader>s :split<CR> <C-w><C-w>
+nnoremap <leader>v :vsplit<CR> <C-w><C-w>
+nnoremap <leader>s :split<CR> <C-w><C-w>
 
 " toggle TagBar
-nmap <leader>t :TagbarToggle<CR>
+nnoremap <leader>t :TagbarToggle<CR>
 
 " sane movement with wrap turned on
 nnoremap j gj
@@ -83,20 +83,20 @@ let NERDTreeDirArrows = 1
 let NERDTreeMouseMode = 3
 
 " FuzzyFinder toggles
-nmap ,f :FufFileWithCurrentBufferDir
-nmap ,b :FufBuffer
-nmap ,t :FufTaggedFile
+nnoremap ,f :FufFileWithCurrentBufferDir
+nnoremap ,b :FufBuffer
+nnoremap ,t :FufTaggedFile
 
 "!ctags -R --extra=+f .
 
 " Shortcut to toggle nerd tree
-map <leader>d :execute 'NERDTreeToggle ' . getcwd()<CR>
+noremap <leader>d :execute 'NERDTreeToggle ' . getcwd()<CR>
 
 " Shortcut to delete trailing whitespace
-nmap <leader>w :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar>:nohl<CR>
+nnoremap <leader>w :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar>:nohl<CR>
 
 " Shortcut to split up silly Fireworks lines
-nmap <leader>x :let _s=@/<Bar>:%s///g
+nnoremap <leader>x :let _s=@/<Bar>:%s///g
 
 " Highlight lines longer than 80 characters
 " match ErrorMsg '\%>80v.\+'
