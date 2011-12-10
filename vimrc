@@ -56,7 +56,6 @@ set expandtab
 set background=dark
 colorscheme aftereight
 
-
 " window splitting mappings
 nnoremap <leader>v :vsplit<CR> <C-w><C-w>
 nnoremap <leader>s :split<CR> <C-w><C-w>
@@ -75,6 +74,10 @@ vnoremap <Down> gj
 vnoremap <Up> gk
 inoremap <Down> <C-o>gj
 inoremap <Up> <C-o>gk
+
+" get the fuck out
+inoremap jk <esc>
+inoremap <esc> <nop>
 
 " NERDTree
 
