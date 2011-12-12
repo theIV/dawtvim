@@ -14,21 +14,27 @@ set go-=T
 
 set hidden
 
-" Highlight search results
+syntax enable
+
+" searchin'
+" highlight search results
 set hlsearch
-" Search as you type
+" search as you type
 set incsearch
+" who cares what case you're searchin' for...
+set ignorecase
+" unless they contain at least one capital letter
+set smartcase
 
 set wildmode=list:longest
 
+" invisibles
 " Show invisible characters
 set list
 " Shortcut to toggle `set list`
 nnoremap <leader>l :set list!<CR>
 " These are pretty cute
 set lcs=tab:│┈,trail:·,tab:▸\ ,eol:¬,extends:>,precedes:<,nbsp:&
-
-:syntax on
 
 filetype plugin indent on
 
