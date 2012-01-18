@@ -7,6 +7,9 @@ call pathogen#runtime_append_all_bundles()
 " http://www.google.com/webfonts/family?family=Lekton&subset=latin
 set guifont=Lekton:h18
 
+" map our leader
+let mapleader = ','
+
 " set cursorline
 set lines=35 columns=80
 set number
@@ -25,6 +28,8 @@ set incsearch
 set ignorecase
 " unless they contain at least one capital letter
 set smartcase
+" get rid of highlighting when we're done
+noremap <leader>n :nohl<CR>
 
 set wildmode=list:longest
 
@@ -33,14 +38,16 @@ set wildmode=list:longest
 set list
 " Shortcut to toggle `set list`
 nnoremap <leader>l :set list!<CR>
-" These are pretty cute
+" These are pretty cute so you can see what's going on
 set lcs=tab:│┈,trail:·,tab:▸\ ,eol:¬,extends:>,precedes:<,nbsp:&
 
 filetype plugin indent on
 
+compiler ruby
+
 augroup myfiletypes
   " Clear old autocmds in group
-  autocmd!
+  au!
    " autoindent with two spaces, always expand tabs
   au FileType ruby,haml,eruby,yaml
   au BufNewFile,BufRead *.liquid setf liquid
@@ -92,9 +99,9 @@ let NERDTreeDirArrows = 1
 let NERDTreeMouseMode = 3
 
 " FuzzyFinder toggles
-nnoremap ,f :FufFileWithCurrentBufferDir
-nnoremap ,b :FufBuffer
-nnoremap ,t :FufTaggedFile
+"nnoremap ,f :FufFileWithCurrentBufferDir
+"nnoremap ,b :FufBuffer
+"nnoremap ,t :FufTaggedFile
 
 " Shortcut to toggle nerd tree
 noremap <leader>d :execute 'NERDTreeToggle ' . getcwd()<CR>
