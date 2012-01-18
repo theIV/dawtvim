@@ -63,6 +63,16 @@ Usage:
 
         :Gist -f
  
+- Star the gist (you need to have opened the gist buffer first).
+  Password authentication is needed.
+
+        :Gist +1
+
+- Unstar the gist (you need to have opened the gist buffer first).
+  Password authentication is needed.
+
+        :Gist -1
+
 - Get gist XXXXX.
 
         :Gist XXXXX
@@ -82,6 +92,10 @@ Usage:
 - List all (public and private) of your gists.
 
         :Gist -la
+
+- List gists from your starred gists.
+
+        :Gist -ls
 
 Tips:
 -----
@@ -129,6 +143,20 @@ If you want your gist to be private by default:
 If you get problems when creating gists try:
 
 	:Gist --abandon
+
+You need to either set global git config
+
+	$ git config --global github.user Username
+	$ git config --global github.token APIToken
+
+or in your `.vimrc`
+
+    let:github_token = 'XXXXX'
+
+or by using an environment variable on *nix systems
+    
+    let:github_token = $GITHUB_TOKEN
+    
 
 Requirements:
 --------

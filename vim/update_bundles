@@ -29,7 +29,9 @@ git_bundles = [
   "git://github.com/ervandew/supertab.git",
   "git://github.com/majutsushi/tagbar.git",
   "git://github.com/vim-scripts/L9.git",
-  "git://github.com/vim-scripts/FuzzyFinder.git"
+  "git://github.com/vim-scripts/FuzzyFinder.git",
+  "https://github.com/Lokaltog/vim-powerline.git",
+  "https://github.com/sickill/vim-pasta.git"
 ]
 
 vim_org_scripts = [
