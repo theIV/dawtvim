@@ -38,7 +38,8 @@ vim_org_scripts = [
   ["minibufexpl",     "3640",   "plugin"],
   ['json',            "10853",  "syntax"],
   ["jquery",          "12107",  "syntax"],
-  ["actionscript",    "10123",  "syntax"]
+  ["actionscript",    "10123",  "syntax"],
+  ["processing",      "8220",   "syntax"]
 ]
 
 exclude_bundles = [
