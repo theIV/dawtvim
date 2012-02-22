@@ -96,15 +96,9 @@ inoremap jk <esc>
 inoremap <esc> <nop>
 
 " NERDTree
-
 " 'wycats' style NERDTree
 let NERDTreeDirArrows = 1
 let NERDTreeMouseMode = 3
-
-" FuzzyFinder toggles
-"nnoremap ,f :FufFileWithCurrentBufferDir
-"nnoremap ,b :FufBuffer
-"nnoremap ,t :FufTaggedFile
 
 " Shortcut to toggle nerd tree
 noremap <leader>d :execute 'NERDTreeToggle ' . getcwd()<CR>
