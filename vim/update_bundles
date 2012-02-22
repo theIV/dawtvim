@@ -2,45 +2,39 @@
 
 # http://tammersaleh.com/posts/the-modern-vim-config-with-pathogen
 
-git_bundles = [
-  "git://github.com/godlygeek/tabular.git",
-  "git://github.com/msanders/snipmate.vim.git",
-  "git://github.com/scrooloose/nerdtree.git",
-  "git://github.com/scrooloose/nerdcommenter.git",
-  "git://github.com/scrooloose/snipmate-snippets.git",
-  "git://github.com/timcharper/textile.vim.git",
-  "git://github.com/tpope/vim-cucumber.git",
-  "git://github.com/tpope/vim-fugitive.git",
-  "git://github.com/tpope/vim-git.git",
-  "git://github.com/tpope/vim-haml.git",
-  "git://github.com/tpope/vim-markdown.git",
-  "git://github.com/tpope/vim-rails.git",
-  "git://github.com/tpope/vim-repeat.git",
-  "git://github.com/tpope/vim-surround.git",
-  "git://github.com/tpope/vim-vividchalk.git",
-  "git://github.com/Raimondi/delimitMate.git",
-  "git://github.com/vim-ruby/vim-ruby.git",
-  "git://github.com/kana/vim-textobj-user",
-  "git://github.com/nelstrom/vim-textobj-rubyblock",
-  "git://github.com/mileszs/ack.vim.git",
-  "git://github.com/nathanaelkane/vim-indent-guides.git",
-  "git://github.com/theIV/twerth-colors.git",
-  "git://github.com/altercation/vim-colors-solarized.git",
-  "git://github.com/mattn/gist-vim.git",
-  "git://github.com/ervandew/supertab.git",
-  "git://github.com/majutsushi/tagbar.git",
-  "git://github.com/vim-scripts/L9.git",
-  "git://github.com/vim-scripts/FuzzyFinder.git",
-  "https://github.com/Lokaltog/vim-powerline.git",
-  "https://github.com/sickill/vim-pasta.git"
-]
-
-vim_org_scripts = [
-  ["minibufexpl",     "3640",   "plugin"],
-  ['json',            "10853",  "syntax"],
-  ["jquery",          "12107",  "syntax"],
-  ["actionscript",    "10123",  "syntax"]
-]
+git_bundles = %w(
+  godlygeek/tabular
+  msanders/snipmate.vim
+  scrooloose/nerdtree
+  scrooloose/nerdcommenter
+  scrooloose/snipmate-snippets
+  timcharper/textile.vim
+  tpope/vim-cucumber
+  tpope/vim-haml
+  tpope/vim-markdown
+  tpope/vim-rails
+  tpope/vim-repeat
+  tpope/vim-surround
+  tpope/vim-vividchalk
+  Raimondi/delimitMate
+  vim-ruby/vim-ruby
+  kana/vim-textobj-user
+  nelstrom/vim-textobj-rubyblock
+  mileszs/ack.vim
+  nathanaelkane/vim-indent-guides
+  theIV/twerth-colors
+  altercation/vim-colors-solarized
+  mattn/gist-vim
+  ervandew/supertab
+  majutsushi/tagbar
+  Lokaltog/vim-powerline
+  sickill/vim-pasta
+  vim-scripts/L9
+  vim-scripts/minibufexpl.vim
+  vim-scripts/jQuery
+  vim-scripts/ActionScript
+  vim-scripts/JSON.vim
+)
 
 exclude_bundles = [
   'vim-colors-olauzon',
@@ -57,18 +51,9 @@ FileUtils.cd(bundles_dir)
 puts "Trashing everything (lookout!)"
 Dir["*"].each { |d| FileUtils.rm_rf(d) unless exclude_bundles.include?(d) }
 
-git_bundles.each do |url|
-  dir = url.split('/').last.sub(/\.git$/, '')
-  puts "  Unpacking #{url} into #{dir}"
-  `git clone #{url} #{dir}`
+git_bundles.each do |bundle|
+  dir = bundle.split('/').last.downcase
+  puts "→ Unpacking #{bundle} into #{dir}"
+  `hub clone #{bundle} #{dir}`
   FileUtils.rm_rf(File.join(dir, ".git"))
-end
-
-vim_org_scripts.each do |name, script_id, script_type|
-  puts "  Downloading #{name}"
-  local_file = File.join(name, script_type, "#{name}.vim")
-  FileUtils.mkdir_p(File.dirname(local_file))
-  File.open(local_file, "w") do |file|
-    file << open("http://www.vim.org/scripts/download_script.php?src_id=#{script_id}").read
-  end
 end
