@@ -1,6 +1,10 @@
+" Use Vim settings, rather then Vi settings
+set nocompatible
+
 " Needed on some linux distros.
 " see http://www.adamlowe.me/2009/12/vim-destroys-all-other-rails-editors.html
-filetype off
+"filetype off
+
 call pathogen#helptags()
 call pathogen#runtime_append_all_bundles()
 
@@ -39,7 +43,7 @@ set list
 " Shortcut to toggle `set list`
 nnoremap <leader>l :set list!<CR>
 " These are pretty cute so you can see what's going on
-set lcs=tab:│┈,trail:·,tab:▸\ ,eol:¬,extends:>,precedes:<,nbsp:&
+set lcs=trail:·,tab:▸\ ,eol:¬,extends:>,precedes:<,nbsp:&
 
 filetype plugin indent on
 
@@ -48,12 +52,11 @@ compiler ruby
 augroup myfiletypes
   " Clear old autocmds in group
   au!
-   " autoindent with two spaces, always expand tabs
   au FileType ruby,haml,eruby,yaml
   au BufNewFile,BufRead *.liquid setf liquid
   au BufNewFile,BufRead *.js set ft=javascript.jquery
   au BufNewFile,BufRead *.as set ft=actionscript
-  au FileType ruby set omnifunc=rubycomplete#Complete
+  "au FileType ruby set omnifunc=rubycomplete#Complete
   au FileType javascript set ai et omnifunc=javascriptcomplete#CompleteJS
   au FileType html set ai et omnifunc=htmlcomplete#CompleteTags
   au FileType css set omnifunc=csscomplete#CompleteCSS
@@ -108,9 +111,6 @@ noremap <leader>d :execute 'NERDTreeToggle ' . getcwd()<CR>
 
 " Shortcut to delete trailing whitespace
 nnoremap <leader>w :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar>:nohl<CR>
-
-" Shortcut to split up silly Fireworks lines
-nnoremap <leader>x :let _s=@/<Bar>:%s///g
 
 " Set column so we know when we've reached 80 characters on a line
 set colorcolumn=81
