@@ -1,0 +1,9 @@
+# Public/Internal/Deprecated: what does it do?
+# 
+# Examples
+# 
+#   bar()
+# 
+#   bar('baz')
+# 
+#   bar('baz', { prop1: 'val1' })

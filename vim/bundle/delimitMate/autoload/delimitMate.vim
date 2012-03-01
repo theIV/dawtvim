@@ -405,11 +405,10 @@ function! delimitMate#ExpandReturn() "{{{
 	if delimitMate#WithinEmptyPair()
 		" Expand:
 		call delimitMate#FlushBuffer()
-		let char = delimitMate#GetCharFromCursor(0)
-		"return "\<Esc>a\<CR>x\<CR>\<Esc>k$\"_xa"
-		"return "\<Esc>a\<CR>\<UP>\<Esc>o"
-		call feedkeys("\<Esc>a\<Del>\<Esc>ox\<BS>\<CR>".char."\<Esc>kA", 't')
-		return ''
+
+		" Not sure why I used the previous combos, but I'm sure somebody will tell
+		" me about it.
+		return "\<Esc>a\<CR>\<Esc>O"
 	else
 		return "\<CR>"
 	endif
@@ -488,6 +487,15 @@ endfunction " }}}
 
 " Tools: {{{
 function! delimitMate#TestMappings() "{{{
+	if &modified
+		echohl WarningMsg
+		let answer = input("Modified buffer, type \"yes\" to write and proceed with test: ") !~ '\c^yes$'
+		echohl NONE
+		if answer != '\c^yes$'
+			return
+		endif
+		write
+	endif
 	let options = sort(keys(delimitMate#OptionsList()))
 	let optoutput = ['delimitMate Report', '==================', '', '* Options: ( ) default, (g) global, (b) buffer','']
 	for option in options
@@ -512,24 +520,18 @@ function! delimitMate#TestMappings() "{{{
 				\ b:_l_delimitMate_left_delims +
 				\ b:_l_delimitMate_quotes_list
 
-	let ibroken = []
+	let imappings = []
 	for map in imaps
-		if maparg(map, "i") !~? 'delimitMate'
-			let output = ''
-			if map == '|'
-				let map = '<Bar>'
-			endif
-			redir => output | execute "verbose imap ".map | redir END
-			let ibroken = ibroken + [map.": is not set:"] + split(output, '\n')
+		let output = ''
+		if map == '|'
+			let map = '<Bar>'
 		endif
+		redir => output | execute "verbose imap ".map | redir END
+		let imappings = imappings + split(output, '\n')
 	endfor
 
 	unlet! output
-	if ibroken == []
-		let output = ['* Mappings:', '', 'All mappings were set-up.', '--------------------', '', '']
-	else
-		let output = ['* Mappings:', ''] + ibroken + ['--------------------', '']
-	endif
+	let output = ['* Mappings:', ''] + imappings + ['--------------------', '']
 	call append('$', output+['* Showcase:', ''])
 	" }}}
 	if b:_l_delimitMate_autoclose
@@ -594,7 +596,7 @@ function! delimitMate#TestMappings() "{{{
 			call append(line('$'), '')
 		endfor
 	endif "}}}
-	redir => setoptions | set | filetype | redir END
+	redir => setoptions | set | filetype | version | redir END
 	call append(line('$'), split(setoptions,"\n")
 				\ + ['--------------------'])
 	setlocal nowrap

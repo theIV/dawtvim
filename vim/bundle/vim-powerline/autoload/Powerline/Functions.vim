@@ -1,3 +1,6 @@
+" Recalculate the trailing whitespace warning when idle, and after saving
+autocmd CursorHold,BufWritePost,InsertLeave * unlet! b:statusline_trailing_space_warning
+
 function! Powerline#Functions#GetMode() " {{{
 	let mode = mode()
 
@@ -43,11 +46,6 @@ function! Powerline#Functions#GetFilesize() " {{{
 		return (bytes / 1024) . 'kB'
 	endif
 endfunction "}}}
-function! Powerline#Functions#GetPwd() "{{{
-	let pwd = substitute(getcwd(), expand("$HOME"), "~", "g")
-
-	return pwd
-endfunction " }}}
 function! Powerline#Functions#GetCharCode() " {{{
 	" Get the output of :ascii
 	redir => ascii
@@ -78,3 +76,15 @@ function! Powerline#Functions#GetCharCode() " {{{
 
 	return "'". char ."' ". nr
 endfunction "}}}
+function! Powerline#Functions#GetWSMarker() " {{{
+	" Return '...' if trailing white space is detected
+	" Return '' otherwise
+	if ! exists("b:statusline_trailing_space_warning")
+		if search('\s$', 'nw') != 0
+			let b:statusline_trailing_space_warning = ' … '
+		else
+			let b:statusline_trailing_space_warning = ''
+		endif
+	endif
+	return b:statusline_trailing_space_warning
+endfunction " }}}

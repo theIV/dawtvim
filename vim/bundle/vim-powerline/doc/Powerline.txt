@@ -161,7 +161,7 @@ adding the required symbols to any outline font and some bitmap fonts, see
 This option defines the theme Powerline uses. The available themes are located 
 in autoload/Powerline/Themes/.
 
-Default: "distinguished"
+Default: "default"
 
 ------------------------------------------------------------------------------
 4.5 Powerline_colorscheme                              *Powerline_colorscheme*
@@ -169,7 +169,7 @@ Default: "distinguished"
 This option defines the colorscheme Powerline uses. The available colorschemes 
 are located in autoload/Powerline/Colorschemes/.
 
-Default: "distinguished"
+Default: "default"
 
 ==============================================================================
 5. Fonts                                                     *Powerline-fonts*
@@ -180,9 +180,9 @@ TODO
 6. Customization                                     *Powerline-customization*
 
 There are currently two ways of customizing Powerline: Basic customization 
-using a couple of functions to insert/remove existing segments into the 
+using a couple of functions to insert and remove existing segments from the 
 statusline, and advanced customization using your own autoload files. The 
-customization features of Powerline allows you to create your own statuslines 
+customization features of Powerline allow you to create your own statuslines 
 without ever touching the original source code.
 
 ------------------------------------------------------------------------------
@@ -240,6 +240,7 @@ Note: Remember to clear your cache with |:PowerlineClearCache| after changing
 your statusline!
 
 6.2.1 Colorschemes                               *Powerline-cust-colorschemes*
+------------------------------------------------------------------------------
 
 Colorschemes should be stored as separate files in 
 {runtimepath}/autoload/Powerline/Colorschemes/.
@@ -253,6 +254,7 @@ EXAMPLE ~
 TODO
 
 6.2.2 Functions                                     *Powerline-cust-functions*
+------------------------------------------------------------------------------
 
 Functions should be stored as separate files in 
 {runtimepath}/autoload/Powerline/Functions/.
@@ -266,6 +268,7 @@ EXAMPLE ~
 TODO
 
 6.2.3 Segments                                       *Powerline-cust-segments*
+------------------------------------------------------------------------------
 
 Segments should be stored as separate files in 
 {runtimepath}/autoload/Powerline/Segments/.
@@ -279,6 +282,7 @@ EXAMPLE ~
 TODO
 
 6.2.4 Themes                                           *Powerline-cust-themes*
+------------------------------------------------------------------------------
 
 Themes should be stored as separate files in 
 {runtimepath}/autoload/Powerline/Themes/.

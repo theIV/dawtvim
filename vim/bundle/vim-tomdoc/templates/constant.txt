@@ -1,0 +1,1 @@
+# Public/Internal/Deprecated: [Type] and its purpose.

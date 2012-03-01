@@ -1,0 +1,25 @@
+# Public/Internal/Deprecated: what does it do?
+# 
+# arg1   - Description of arg1 (default: 'foo').
+# hash1  - Description of hash1 (default: {}):
+#          :prop1  - Description of prop1.
+#          :prop2  - Description of prop2 (optional).
+# 
+# Yields the type of the yielded object
+# 
+# Examples
+# 
+#   bar()
+# 
+#   bar('baz')
+# 
+#   bar('baz', { prop1: 'val1' })
+# 
+# Returns/Raises whatever it might return or raise and
+#   wrapped lines must be indented at least 2 spaces."
+#
+# Signature
+#
+#   find_by_<field>]_and_<field>...](args)
+#
+# field   - A field name.
