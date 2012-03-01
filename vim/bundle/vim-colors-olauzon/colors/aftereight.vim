@@ -46,9 +46,9 @@ hi SpecialKey     guifg=yellowgreen ctermfg=darkgreen
 hi StatusLine     guibg=#c2bfa5     guifg=black gui=none
 hi StatusLineNC   guibg=#c2bfa5     guifg=grey50 gui=none
 hi Title          guifg=indianred
-hi Visual  gui=none guifg=khaki     guibg=olivedrab
+hi Visual         gui=none guifg=khaki     guibg=olivedrab
 "hi VisualNOS
-hi WarningMsg  guifg=salmon
+hi WarningMsg     guifg=salmon
 "hi WildMenu
 "hi Menu
 "hi Scrollbar
@@ -103,5 +103,10 @@ hi Underlined     cterm=underline ctermfg=5
 hi Ignore         cterm=bold ctermfg=7
 hi Ignore         ctermfg=darkgrey
 hi Error          cterm=bold ctermfg=7 ctermbg=1
+
+" Indent Guides colors
+hi IndentGuidesOdd  guibg=grey10
+hi IndentGuidesEven guibg=grey10
+
 
 "vim: sw=4
