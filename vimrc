@@ -70,7 +70,7 @@ set smarttab
 set expandtab
 
 set background=dark
-colorscheme aftereight
+colorscheme vividchalk
 
 " window splitting mappings
 nnoremap <leader>v :vsplit<CR> <C-w><C-w>
