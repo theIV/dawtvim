@@ -35,6 +35,7 @@ git_bundles = %w(
   vim-scripts/ActionScript
   vim-scripts/JSON.vim
   theIV/vim-tomdoc
+  kchmck/vim-coffee-script
 )
 
 exclude_bundles = [
