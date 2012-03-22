@@ -6,7 +6,6 @@ let g:Pl#Parser#Symbols = {
 			\ , 'RO'    : 'RO'
 			\ , 'FT'    : 'FT'
 			\ , 'LINE'  : 'LN'
-			\ , 'COL'   : 'C'
 		\ }
 	\ },
 	\ 'unicode': {
@@ -16,7 +15,6 @@ let g:Pl#Parser#Symbols = {
 			\ , 'RO'    : [0x2613]
 			\ , 'FT'    : [0x2691]
 			\ , 'LINE'  : [0x204b]
-			\ , 'COL'   : [0x2551]
 		\ },
 	\ },
 	\ 'fancy': {
@@ -26,10 +24,21 @@ let g:Pl#Parser#Symbols = {
 			\ , 'RO'    : [0x2b64]
 			\ , 'FT'    : [0x2b62, 0x2b63]
 			\ , 'LINE'  : [0x2b61]
-			\ , 'COL'   : [0x2551]
 		\ }
 	\ }
 \ }
+
+" Handle symbol overrides
+for [s:key, s:value] in items(g:Powerline_symbols_override)
+	let g:Pl#Parser#Symbols[g:Powerline_symbols].symbols[s:key] = s:value
+
+	unlet! s:key s:value
+endfor
+
+" Handle divider overrides
+if len(g:Powerline_dividers_override) == 4
+	let g:Pl#Parser#Symbols[g:Powerline_symbols].dividers = g:Powerline_dividers_override
+endif
 
 let s:LEFT_SIDE = 0
 let s:RIGHT_SIDE = 2
@@ -178,9 +187,11 @@ function! s:ParseSegments(mode, side, segments, ...) " {{{
 
 				" Check if we're in a group (level > 0)
 				if level > 0
-					" If we're in a group we don't have dividers between segments, so we should only pad one side
-					let padding_right = (side == s:LEFT_SIDE  ? repeat(' ', s:PADDING) : '')
-					let padding_left  = (side == s:RIGHT_SIDE ? repeat(' ', s:PADDING) : '')
+					" If we're in a group we don't have dividers between
+					" segments, so we should only pad one side, but only pad
+					" if the segment doesn't have Pl#Segment#NoPadding() set
+					let padding_right = (seg_curr.padding && side == s:LEFT_SIDE  ? repeat(' ', s:PADDING) : '')
+					let padding_left  = (seg_curr.padding && side == s:RIGHT_SIDE ? repeat(' ', s:PADDING) : '')
 
 					" Check if we lack a bg/fg color for this segment
 					" If we do, use the bg/fg color from base_color
