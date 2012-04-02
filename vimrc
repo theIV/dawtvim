@@ -21,6 +21,9 @@ set go-=T
 
 set hidden
 
+" be gone, scrollbars
+set guioptions-=r
+
 syntax enable
 
 " searchin'
