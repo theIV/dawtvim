@@ -1,0 +1,1 @@
+{"name":"Dawtvim","body":"## vimmy mcvim vim vim.\r\n\r\n### requirements: ruby\r\n\r\n### usage:\r\n\r\n```sh\r\n$: ./vim/update_bundles\r\n$: ./script/update.sh\r\n```\r\n\r\nThis will 'blow away' any other symlinks you might have.","tagline":"my (dawt)vim files","google":"","note":"Don't delete this file! It's used internally to help with page regeneration."}
