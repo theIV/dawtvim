@@ -82,6 +82,9 @@ nnoremap <leader>s :split<CR> <C-w><C-w>
 " toggle TagBar
 nnoremap <leader>t :TagbarToggle<CR>
 
+" toggle MiniBufExplorer
+nnoremap <leader>m :TMiniBufExplorer<CR>
+
 " sane movement with wrap turned on
 nnoremap j gj
 nnoremap k gk
