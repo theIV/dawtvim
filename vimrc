@@ -103,8 +103,9 @@ inoremap <esc> <nop>
 
 " NERDTree
 " 'wycats' style NERDTree
-let NERDTreeDirArrows = 1
-let NERDTreeMouseMode = 3
+let NERDTreeDirArrows  = 1
+let NERDTreeMouseMode  = 3
+let NERDTreeShowHidden = 1
 
 " Shortcut to toggle nerd tree
 noremap <leader>d :execute 'NERDTreeToggle ' . getcwd()<CR>
