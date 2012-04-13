@@ -40,6 +40,8 @@ noremap <leader>n :nohl<CR>
 
 set wildmode=list:longest
 
+set wildignore+=*.sw? " Vim swap files
+
 " invisibles
 " Show invisible characters
 set list
@@ -63,6 +65,16 @@ augroup myfiletypes
   au FileType javascript set ai et omnifunc=javascriptcomplete#CompleteJS
   au FileType html set ai et omnifunc=htmlcomplete#CompleteTags
   au FileType css set omnifunc=csscomplete#CompleteCSS
+augroup END
+
+" Only show cursorline in the current window and in normal mode.
+
+augroup cline
+    au!
+    au WinLeave * set nocursorline
+    au WinEnter * set cursorline
+    au InsertEnter * set nocursorline
+    au InsertLeave * set cursorline
 augroup END
 
 set ts=2
