@@ -13,11 +13,17 @@ set guifont=Lekton:h18
 
 " map our leader
 let mapleader = ','
+let maplocalleader = '\'
 
 " set cursorline
 set lines=35 columns=80
 set number
 set go-=T
+set go-=l
+set go-=L
+set go-=r
+set go-=R
+
 
 set hidden
 
@@ -55,16 +61,50 @@ filetype plugin indent on
 compiler ruby
 
 augroup myfiletypes
-  " Clear old autocmds in group
   au!
   au FileType ruby,haml,eruby,yaml
-  au BufNewFile,BufRead *.liquid setf liquid
-  au BufNewFile,BufRead *.js set ft=javascript.jquery
-  au BufNewFile,BufRead *.as set ft=actionscript
+  au BufNewFile,BufRead *.liquid setlocal filetype=liquid
+  au BufNewFile,BufRead *.js setlocal filetype=javascript.jquery
+  au BufNewFile,BufRead *.as setlocal filetype=actionscript
   "au FileType ruby set omnifunc=rubycomplete#Complete
   au FileType javascript set ai et omnifunc=javascriptcomplete#CompleteJS
   au FileType html set ai et omnifunc=htmlcomplete#CompleteTags
-  au FileType css set omnifunc=csscomplete#CompleteCSS
+augroup END
+
+augroup ft_css
+    au!
+
+    au BufNewFile,BufRead *.sass,*.scss setlocal filetype=sass
+
+    au Filetype sass,scss,css setlocal foldmethod=marker
+    au Filetype sass,scss,css setlocal foldmarker={,}
+    au Filetype sass,scss,css setlocal omnifunc=csscomplete#CompleteCSS
+    au Filetype sass,scss,css setlocal iskeyword+=-
+
+    " Use <localleader>S to sort properties.  Turns this:
+    "
+    "     p {
+    "         width: 200px;
+    "         height: 100px;
+    "         background: red;
+    "
+    "         ...
+    "     }
+    "
+    " into this:
+
+    "     p {
+    "         background: red;
+    "         height: 100px;
+    "         width: 200px;
+    "
+    "         ...
+    "     }
+    au BufNewFile,BufRead *.sass,*.scss,*.css nnoremap <buffer> <localleader>S ?{<CR>jV/\v^\s*\}?$<CR>k:sort<CR>:noh<CR>
+
+    " Make {<cr> insert a pair of brackets in such a way that the cursor is correctly
+    " positioned inside of them AND the following code doesn't get unfolded.
+    au BufNewFile,BufRead *.sass,*.scss,*.css inoremap <buffer> {<cr> {}<left><cr><space><space><space><space>.<cr><esc>kA<bs>
 augroup END
 
 " Only show cursorline in the current window and in normal mode.
@@ -77,15 +117,15 @@ augroup cline
     au InsertLeave * set cursorline
 augroup END
 
-set ts=2
-set sts=2
-set sw=2
+set tabstop=2
+set softtabstop=2
+set shiftwidth=2
 set autoindent
 set smarttab
 set expandtab
 
-set background=dark
-colorscheme vividchalk
+set background=light
+colorscheme solarized
 
 " window splitting mappings
 nnoremap <leader>v :vsplit<CR> <C-w><C-w>
@@ -122,8 +162,19 @@ let NERDTreeShowHidden = 1
 " Shortcut to toggle nerd tree
 noremap <leader>d :execute 'NERDTreeToggle ' . getcwd()<CR>
 
+
+" System clipboard interaction
+" From https://github.com/henrik/dotfiles/blob/master/vim/config/mappings.vim
+noremap <leader>y "*y
+noremap <leader>p :set paste<CR>"*p<CR>:set nopaste<CR>
+noremap <leader>P :set paste<CR>"*P<CR>:set nopaste<CR>
+
+
 " Shortcut to delete trailing whitespace
 nnoremap <leader>w :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar>:nohl<CR>
+
+" Keep 3 lines of 'buffer' when scrolling
+set scrolloff=3
 
 " Set column so we know when we've reached 80 characters on a line
 set colorcolumn=81
@@ -137,3 +188,8 @@ highlight def link rubyRspec Function
 " indent guides sizing
 let g:indent_guides_start_level = 2
 let g:indent_guides_guide_size  = 1
+
+
+" Ack {{{
+
+nnoremap <leader>a :Ack!<space>
