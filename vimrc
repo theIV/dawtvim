@@ -76,8 +76,6 @@ augroup ft_css
 
     au BufNewFile,BufRead *.sass,*.scss setlocal filetype=sass
 
-    au Filetype sass,scss,css setlocal foldmethod=marker
-    au Filetype sass,scss,css setlocal foldmarker={,}
     au Filetype sass,scss,css setlocal omnifunc=csscomplete#CompleteCSS
     au Filetype sass,scss,css setlocal iskeyword+=-
 
