@@ -113,6 +113,7 @@ function! s:Init()
 
     if !s:autocommands_done
         call s:CreateAutocommands()
+        doautocmd CursorHold
     endif
 
     return 1
@@ -658,14 +659,32 @@ function! s:InitTypes()
     let type_tex = s:TypeInfo.New()
     let type_tex.ctagstype = 'tex'
     let type_tex.kinds     = [
+        \ {'short' : 'i', 'long' : 'includes',       'fold' : 1, 'stl' : 0},
         \ {'short' : 'p', 'long' : 'parts',          'fold' : 0, 'stl' : 1},
         \ {'short' : 'c', 'long' : 'chapters',       'fold' : 0, 'stl' : 1},
         \ {'short' : 's', 'long' : 'sections',       'fold' : 0, 'stl' : 1},
         \ {'short' : 'u', 'long' : 'subsections',    'fold' : 0, 'stl' : 1},
         \ {'short' : 'b', 'long' : 'subsubsections', 'fold' : 0, 'stl' : 1},
         \ {'short' : 'P', 'long' : 'paragraphs',     'fold' : 0, 'stl' : 0},
-        \ {'short' : 'G', 'long' : 'subparagraphs',  'fold' : 0, 'stl' : 0}
+        \ {'short' : 'G', 'long' : 'subparagraphs',  'fold' : 0, 'stl' : 0},
+        \ {'short' : 'l', 'long' : 'labels',         'fold' : 0, 'stl' : 0}
     \ ]
+    let type_tex.sro        = '""'
+    let type_tex.kind2scope = {
+        \ 'p' : 'part',
+        \ 'c' : 'chapter',
+        \ 's' : 'section',
+        \ 'u' : 'subsection',
+        \ 'b' : 'subsubsection'
+    \ }
+    let type_tex.scope2kind = {
+        \ 'part'          : 'p',
+        \ 'chapter'       : 'c',
+        \ 'section'       : 's',
+        \ 'subsection'    : 'u',
+        \ 'subsubsection' : 'b'
+    \ }
+    let type_tex.sort = 0
     let s:known_types.tex = type_tex
     " Vala {{{3
     " Vala is supported by the ctags fork provided by Anjuta, so only add the
@@ -890,6 +909,8 @@ function! s:RestoreSession()
         endif
     endif
 
+    let s:last_autofocus = 0
+
     call s:Init()
 
     call s:InitWindow(g:tagbar_autoclose)
@@ -1099,6 +1120,7 @@ function! s:BaseTag._init(name) dict
     let self.parent        = {}
     let self.tline         = -1
     let self.fileinfo      = {}
+    let self.typeinfo      = {}
 endfunction
 
 " s:BaseTag.isNormalTag() {{{3
@@ -1240,10 +1262,10 @@ function! s:NormalTag.isNormalTag() dict
     return 1
 endfunction
 
-" s:NormalTag.str() {{{3
-function! s:NormalTag.str() dict
+" s:NormalTag.strfmt() {{{3
+function! s:NormalTag.strfmt() dict
     let fileinfo = self.fileinfo
-    let typeinfo = s:known_types[fileinfo.ftype]
+    let typeinfo = self.typeinfo
 
     let suffix = get(self.fields, 'signature', '')
     if has_key(self.fields, 'type')
@@ -1256,9 +1278,13 @@ function! s:NormalTag.str() dict
     return self._getPrefix() . self.name . suffix . "\n"
 endfunction
 
-" s:NormalTag.strshort() {{{3
-function! s:NormalTag.strshort(longsig) dict
-    let str = self.name
+" s:NormalTag.str() {{{3
+function! s:NormalTag.str(longsig, full) dict
+    if a:full && self.path != ''
+        let str = self.path . self.typeinfo.sro . self.name
+    else
+        let str = self.name
+    endif
 
     if has_key(self.fields, 'signature')
         if a:longsig
@@ -1284,10 +1310,10 @@ function! s:PseudoTag.isPseudoTag() dict
     return 1
 endfunction
 
-" s:PseudoTag.str() {{{3
-function! s:PseudoTag.str() dict
+" s:PseudoTag.strfmt() {{{3
+function! s:PseudoTag.strfmt() dict
     let fileinfo = self.fileinfo
-    let typeinfo = s:known_types[fileinfo.ftype]
+    let typeinfo = self.typeinfo
 
     let suffix = get(self.fields, 'signature', '')
     if has_key(typeinfo.kind2scope, self.fields.kind)
@@ -1390,6 +1416,7 @@ function! s:FileInfo.New(fname, ftype) dict
     " Dictionary of the folding state of 'kind's, indexed by short name
     let newobj.kindfolds = {}
     let typeinfo = s:known_types[a:ftype]
+    let newobj.typeinfo = typeinfo
     " copy the default fold state from the type info
     for kind in typeinfo.kinds
         let newobj.kindfolds[kind.short] =
@@ -1768,7 +1795,7 @@ function! s:ProcessFile(fname, ftype)
         let fileinfo = s:FileInfo.New(a:fname, a:ftype)
     endif
 
-    let typeinfo = s:known_types[a:ftype]
+    let typeinfo = fileinfo.typeinfo
 
     " Parse the ctags output lines
     call s:LogDebugMessage('Parsing ctags output')
@@ -1972,6 +1999,7 @@ function! s:ParseTagline(part1, part2, typeinfo, fileinfo)
     endif
 
     let taginfo.fileinfo = a:fileinfo
+    let taginfo.typeinfo = a:typeinfo
 
     " Needed for folding
     try
@@ -2158,6 +2186,7 @@ function! s:CreatePseudoTag(name, parent, scope, typeinfo, fileinfo)
     let pseudotag.parent = a:parent
 
     let pseudotag.fileinfo = a:fileinfo
+    let pseudotag.typeinfo = a:typeinfo
 
     call pseudotag.initFoldState()
 
@@ -2286,7 +2315,7 @@ function! s:RenderContent(...)
 
     call s:PrintHelp()
 
-    let typeinfo = s:known_types[fileinfo.ftype]
+    let typeinfo = fileinfo.typeinfo
 
     " Print tags
     call s:PrintKinds(typeinfo, fileinfo)
@@ -2351,9 +2380,9 @@ function! s:PrintKinds(typeinfo, fileinfo)
             " Scoped tags
             for tag in curtags
                 if g:tagbar_compact && first_tag && s:short_help
-                    silent 0put =tag.str()
+                    silent 0put =tag.strfmt()
                 else
-                    silent  put =tag.str()
+                    silent  put =tag.strfmt()
                 endif
 
                 " Save the current tagbar line in the tag for easy
@@ -2416,7 +2445,7 @@ function! s:PrintKinds(typeinfo, fileinfo)
 
             if !kindtag.isFolded()
                 for tag in curtags
-                    let str = tag.str()
+                    let str = tag.strfmt()
                     silent put ='  ' . str
 
                     " Save the current tagbar line in the tag for easy
@@ -2440,7 +2469,7 @@ endfunction
 " s:PrintTag() {{{2
 function! s:PrintTag(tag, depth, fileinfo, typeinfo)
     " Print tag indented according to depth
-    silent put =repeat(' ', a:depth * 2) . a:tag.str()
+    silent put =repeat(' ', a:depth * 2) . a:tag.strfmt()
 
     " Save the current tagbar line in the tag for easy
     " highlighting access
@@ -2538,7 +2567,7 @@ endfunction
 function! s:HighlightTag()
     let tagline = 0
 
-    let tag = s:GetNearbyTag()
+    let tag = s:GetNearbyTag(1)
     if !empty(tag)
         let tagline = tag.tline
     endif
@@ -2820,7 +2849,7 @@ function! s:SetFoldLevel(level, force)
 
     call s:SetFoldLevelRecursive(fileinfo, fileinfo.tags, a:level)
 
-    let typeinfo = s:known_types[fileinfo.ftype]
+    let typeinfo = fileinfo.typeinfo
 
     " Apply foldlevel to 'kind's
     if a:level == 0
@@ -2863,7 +2892,7 @@ function! s:OpenParents(...)
     if a:0 == 1
         let tag = a:1
     else
-        let tag = s:GetNearbyTag()
+        let tag = s:GetNearbyTag(1)
     endif
 
     call tag.openParents()
@@ -3064,13 +3093,13 @@ endfunction
 
 " s:GetNearbyTag() {{{2
 " Get the tag info for a file near the cursor in the current file
-function! s:GetNearbyTag()
+function! s:GetNearbyTag(all)
     let fileinfo = s:known_files.getCurrent()
     if empty(fileinfo)
-        return
+        return {}
     endif
 
-    let typeinfo = s:known_types[fileinfo.ftype]
+    let typeinfo = fileinfo.typeinfo
     let curline = line('.')
     let tag = {}
 
@@ -3081,8 +3110,9 @@ function! s:GetNearbyTag()
     " highlighting isn't /that/ important ignore it for now.
     for line in range(curline, 1, -1)
         if has_key(fileinfo.fline, line)
-            let tag = fileinfo.fline[line]
-            if typeinfo.getKind(tag.fields.kind).stl
+            let curtag = fileinfo.fline[line]
+            if a:all || typeinfo.getKind(curtag.fields.kind).stl
+                let tag = curtag
                 break
             endif
         endif
@@ -3245,6 +3275,8 @@ function! s:LogDebugMessage(msg)
 endfunction
 
 " Autoload functions {{{1
+
+" Wrappers {{{2
 function! tagbar#ToggleWindow()
     call s:ToggleWindow()
 endfunction
@@ -3278,6 +3310,7 @@ endfunction
 function! tagbar#RestoreSession()
     call s:RestoreSession()
 endfunction
+" }}}2
 
 " tagbar#getusertypes() {{{2
 function! tagbar#getusertypes()
@@ -3298,6 +3331,7 @@ function! tagbar#getusertypes()
     return defdict
 endfunction
 
+" tagbar#autoopen() {{{2
 " Automatically open Tagbar if one of the open buffers contains a supported
 " file
 function! tagbar#autoopen(...)
@@ -3322,17 +3356,25 @@ function! tagbar#autoopen(...)
                          \ 'without finding valid file')
 endfunction
 
+" tagbar#currenttag() {{{2
 function! tagbar#currenttag(fmt, default, ...)
-    let longsig = a:0 > 0 ? a:1 : 0
+    if a:0 > 0
+        " also test for non-zero value for backwards compatibility
+        let longsig  = a:1 =~# 's' || (type(a:1) == type(0) && a:1 != 0)
+        let fullpath = a:1 =~# 'f'
+    else
+        let longsig  = 0
+        let fullpath = 0
+    endif
 
     if !s:Init()
         return ''
     endif
 
-    let tag = s:GetNearbyTag()
+    let tag = s:GetNearbyTag(0)
 
     if !empty(tag)
-        return printf(a:fmt, tag.strshort(longsig))
+        return printf(a:fmt, tag.str(longsig, fullpath))
     else
         return a:default
     endif
