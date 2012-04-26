@@ -37,6 +37,7 @@ git_bundles = %w(
   theIV/vim-tomdoc
   kchmck/vim-coffee-script
   kien/ctrlp.vim
+  vim-scripts/VimClojure
 )
 
 exclude_bundles = [
