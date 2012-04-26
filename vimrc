@@ -42,11 +42,12 @@ set ignorecase
 " unless they contain at least one capital letter
 set smartcase
 " get rid of highlighting when we're done
-noremap <leader>n :nohl<CR>
+noremap <leader><space> :nohl<CR>
 
 set wildmode=list:longest
 
 set wildignore+=*.sw? " Vim swap files
+set wildignore+=tags  " Ignore tag files
 
 " invisibles
 " Show invisible characters
@@ -155,29 +156,27 @@ inoremap <esc> <nop>
 " 'wycats' style NERDTree
 let NERDTreeDirArrows  = 1
 let NERDTreeMouseMode  = 3
+" show hidden files
 let NERDTreeShowHidden = 1
-
 " Shortcut to toggle nerd tree
 noremap <leader>d :execute 'NERDTreeToggle ' . getcwd()<CR>
 
-
-" System clipboard interaction
+" system clipboard interaction
 " From https://github.com/henrik/dotfiles/blob/master/vim/config/mappings.vim
 noremap <leader>y "*y
 noremap <leader>p :set paste<CR>"*p<CR>:set nopaste<CR>
 noremap <leader>P :set paste<CR>"*P<CR>:set nopaste<CR>
 
-
-" Shortcut to delete trailing whitespace
+" delete trailing whitespace
 nnoremap <leader>w :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar>:nohl<CR>
 
-" Keep 3 lines of 'buffer' when scrolling
+" keep 3 extra lines when scrolling
 set scrolloff=3
 
-" Set column so we know when we've reached 80 characters on a line
+" set column so we know when we've reached 80 characters on a line
 set colorcolumn=81
 
-" Load matchit
+" load matchit
 runtime macros/matchit.vim
 
 autocmd BufRead *_spec.rb syn keyword rubyRspec describe context it specify it_should_behave_like before after setup subject
@@ -187,7 +186,5 @@ highlight def link rubyRspec Function
 let g:indent_guides_start_level = 2
 let g:indent_guides_guide_size  = 1
 
-
-" Ack {{{
-
+" shortcut for ack
 nnoremap <leader>a :Ack!<space>
