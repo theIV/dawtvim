@@ -152,6 +152,9 @@ inoremap <Up> <C-o>gk
 inoremap jk <esc>
 inoremap <esc> <nop>
 
+" go fullscreen
+nnoremap <leader>f :set invfullscreen<CR>
+
 " NERDTree
 " 'wycats' style NERDTree
 let NERDTreeDirArrows  = 1
