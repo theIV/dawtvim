@@ -24,6 +24,8 @@ set go-=L
 set go-=r
 set go-=R
 
+" stfu!
+set visualbell
 
 set hidden
 
