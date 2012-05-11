@@ -125,6 +125,8 @@ set autoindent
 set smarttab
 set expandtab
 
+" colorschemin'
+let g:solarized_contrast = "high"
 set background=light
 colorscheme solarized
 
