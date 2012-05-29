@@ -48,8 +48,9 @@ noremap <leader><space> :nohl<CR>
 
 set wildmode=list:longest
 
-set wildignore+=*.sw? " Vim swap files
-set wildignore+=tags  " Ignore tag files
+set wildignore+=*.sw?     " Vim swap files
+set wildignore+=.DS_Store " You are the bane of my existence, .DS_Store.
+set wildignore+=tags      " Ignore tag files
 
 " invisibles
 " Show invisible characters
