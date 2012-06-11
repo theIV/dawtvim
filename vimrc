@@ -9,7 +9,9 @@ call pathogen#helptags()
 call pathogen#runtime_append_all_bundles()
 
 " http://www.google.com/webfonts/family?family=Lekton&subset=latin
-set guifont=Lekton:h18
+set guifont=Lekton:h14
+" increase the line height a bit
+set linespace=5
 
 " map our leader
 let mapleader = ','
