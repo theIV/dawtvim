@@ -130,7 +130,7 @@ set expandtab
 
 " colorschemin'
 let g:solarized_contrast = "high"
-set background=light
+set background=dark
 colorscheme solarized
 
 " window splitting mappings
