@@ -1,5 +1,6 @@
-" Use Vim settings, rather then Vi settings
 set nocompatible
+set encoding=utf-8  " always roll utf-8
+set laststatus=2    " always show the statusline
 
 " Needed on some linux distros.
 " see http://www.adamlowe.me/2009/12/vim-destroys-all-other-rails-editors.html
@@ -9,9 +10,10 @@ call pathogen#helptags()
 call pathogen#runtime_append_all_bundles()
 
 " http://www.google.com/webfonts/family?family=Lekton&subset=latin
-set guifont=Lekton:h14
+"set guifont=Lekton:h14
+set guifont=Mensch\ for\ Powerline:h14
 " increase the line height a bit
-set linespace=5
+set linespace=2
 
 " map our leader
 let mapleader = ','
@@ -130,7 +132,7 @@ set expandtab
 
 " colorschemin'
 let g:solarized_contrast = "high"
-set background=dark
+set background =dark
 colorscheme solarized
 
 " window splitting mappings
@@ -138,6 +140,7 @@ nnoremap <leader>v :vsplit<CR> <C-w><C-w>
 nnoremap <leader>s :split<CR> <C-w><C-w>
 
 " toggle TagBar
+let g:tagbar_ctags_bin = "/Users/frecial/Developer/bin/ctags"
 nnoremap <leader>t :TagbarToggle<CR>
 
 " toggle MiniBufExplorer
@@ -195,6 +198,9 @@ highlight def link rubyRspec Function
 " indent guides sizing
 let g:indent_guides_start_level = 2
 let g:indent_guides_guide_size  = 1
+
+" powerline fanciness
+let g:Powerline_symbols = 'fancy'
 
 " shortcut for ack
 nnoremap <leader>a :Ack!<space>
