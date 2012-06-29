@@ -174,6 +174,9 @@ let NERDTreeShowHidden = 1
 " Shortcut to toggle nerd tree
 noremap <leader>d :execute 'NERDTreeToggle ' . getcwd()<CR>
 
+" numbers.vim
+nnoremap <F3> :NumbersToggle<CR>
+
 " system clipboard interaction
 " From https://github.com/henrik/dotfiles/blob/master/vim/config/mappings.vim
 noremap <leader>y "*y
