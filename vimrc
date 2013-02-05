@@ -1,42 +1,44 @@
-set nocompatible
 set encoding=utf-8  " always roll utf-8
 set laststatus=2    " always show the statusline
 
-" Needed on some linux distros.
-" see http://www.adamlowe.me/2009/12/vim-destroys-all-other-rails-editors.html
-"filetype off
+filetype plugin indent on
+syntax enable
 
 call pathogen#helptags()
 call pathogen#runtime_append_all_bundles()
 
+" As a nice alternate, when you are feeling flirty:
 " http://www.google.com/webfonts/family?family=Lekton&subset=latin
-"set guifont=Lekton:h14
-set guifont=Mensch\ for\ Powerline:h14
-" increase the line height a bit
-set linespace=2
+" set guifont=Lekton:h14
+set guifont=Monaco:h14
+
+" no tabs, 2 spaces
+set tabstop=2
+set softtabstop=2
+set shiftwidth=2
+set autoindent
+set smarttab
+set expandtab
 
 " map our leader
 let mapleader = ','
 let maplocalleader = '\'
 
 " set cursorline
-set lines=35 columns=80
+set lines=25 columns=90
 set number
+" begone, evil scrollbars
 set go-=T
 set go-=l
 set go-=L
 set go-=r
 set go-=R
+set guioptions-=r
 
 " stfu!
 set visualbell
 
 set hidden
-
-" be gone, scrollbars
-set guioptions-=r
-
-syntax enable
 
 " searchin'
 " highlight search results
@@ -64,87 +66,72 @@ nnoremap <leader>l :set list!<CR>
 " These are pretty cute so you can see what's going on
 set lcs=trail:·,tab:▸\ ,eol:¬,extends:>,precedes:<,nbsp:&
 
-filetype plugin indent on
-
 compiler ruby
 
-augroup myfiletypes
+augroup filetypes
   au!
   au FileType ruby,haml,eruby,yaml
   au BufNewFile,BufRead *.liquid setlocal filetype=liquid
   au BufNewFile,BufRead *.js setlocal filetype=javascript.jquery
   au BufNewFile,BufRead *.as setlocal filetype=actionscript
   "au FileType ruby set omnifunc=rubycomplete#Complete
-  au FileType javascript set ai et omnifunc=javascriptcomplete#CompleteJS
-  au FileType html set ai et omnifunc=htmlcomplete#CompleteTags
+  au FileType javascript set autoindent expandtab omnifunc=javascriptcomplete#CompleteJS
+  au FileType html set autoindent expandtab omnifunc=htmlcomplete#CompleteTags
 augroup END
 
-augroup ft_css
-    au!
+augroup filetype_css
+  au!
+  au BufNewFile,BufRead *.sass,*.scss setlocal filetype=sass
 
-    au BufNewFile,BufRead *.sass,*.scss setlocal filetype=sass
+  au Filetype sass,scss,css setlocal omnifunc=csscomplete#CompleteCSS
+  au Filetype sass,scss,css setlocal iskeyword+=-
 
-    au Filetype sass,scss,css setlocal omnifunc=csscomplete#CompleteCSS
-    au Filetype sass,scss,css setlocal iskeyword+=-
+  " Use <localleader>S to sort properties.  Turns this:
+  "
+  "     p {
+  "         width: 200px;
+  "         height: 100px;
+  "         background: red;
+  "
+  "         ...
+  "     }
+  "
+  " into this:
 
-    " Use <localleader>S to sort properties.  Turns this:
-    "
-    "     p {
-    "         width: 200px;
-    "         height: 100px;
-    "         background: red;
-    "
-    "         ...
-    "     }
-    "
-    " into this:
+  "     p {
+  "         background: red;
+  "         height: 100px;
+  "         width: 200px;
+  "
+  "         ...
+  "     }
+  au BufNewFile,BufRead *.sass,*.scss,*.css nnoremap <buffer> <localleader>S ?{<CR>jV/\v^\s*\}?$<CR>k:sort<CR>:noh<CR>
 
-    "     p {
-    "         background: red;
-    "         height: 100px;
-    "         width: 200px;
-    "
-    "         ...
-    "     }
-    au BufNewFile,BufRead *.sass,*.scss,*.css nnoremap <buffer> <localleader>S ?{<CR>jV/\v^\s*\}?$<CR>k:sort<CR>:noh<CR>
-
-    " Make {<cr> insert a pair of brackets in such a way that the cursor is correctly
-    " positioned inside of them AND the following code doesn't get unfolded.
-    au BufNewFile,BufRead *.sass,*.scss,*.css inoremap <buffer> {<cr> {}<left><cr><space><space><space><space>.<cr><esc>kA<bs>
+  " Make {<cr> insert a pair of brackets in such a way that the cursor is correctly
+  " positioned inside of them AND the following code doesn't get unfolded.
+  au BufNewFile,BufRead *.sass,*.scss,*.css inoremap <buffer> {<cr> {}<left><cr><space><space><space><space>.<cr><esc>kA<bs>
 augroup END
 
 " Only show cursorline in the current window and in normal mode.
-
-augroup cline
-    au!
-    au WinLeave * set nocursorline
-    au WinEnter * set cursorline
-    au InsertEnter * set nocursorline
-    au InsertLeave * set cursorline
+augroup cursorline
+  au!
+  au WinLeave * set nocursorline
+  au WinEnter * set cursorline
+  au InsertEnter * set nocursorline
+  au InsertLeave * set cursorline
 augroup END
 
-set tabstop=2
-set softtabstop=2
-set shiftwidth=2
-set autoindent
-set smarttab
-set expandtab
-
 " colorschemin'
-let g:solarized_contrast = "high"
-set background =dark
-colorscheme solarized
+colorscheme aftereight
 
 " window splitting mappings
 nnoremap <leader>v :vsplit<CR> <C-w><C-w>
 nnoremap <leader>s :split<CR> <C-w><C-w>
 
-" toggle TagBar
-let g:tagbar_ctags_bin = "/Users/frecial/Developer/bin/ctags"
-nnoremap <leader>t :TagbarToggle<CR>
-
-" toggle MiniBufExplorer
-nnoremap <leader>m :TMiniBufExplorer<CR>
+" TagBar
+  let g:tagbar_ctags_bin = "/Users/frecial/Developer/bin/ctags"
+  " toggle
+  nnoremap <leader>t :TagbarToggle<CR>
 
 " sane movement with wrap turned on
 nnoremap j gj
@@ -166,16 +153,17 @@ inoremap <esc> <nop>
 nnoremap <leader>f :set invfullscreen<CR>
 
 " NERDTree
-" 'wycats' style NERDTree
-let NERDTreeDirArrows  = 1
-let NERDTreeMouseMode  = 3
-" show hidden files
-let NERDTreeShowHidden = 1
-" Shortcut to toggle nerd tree
-noremap <leader>d :execute 'NERDTreeToggle ' . getcwd()<CR>
+  " janus style
+  let NERDTreeDirArrows  = 1
+  let NERDTreeMouseMode  = 3
+  " hide hidden files...
+  let NERDTreeShowHidden = 0
+  " shortcut to toggle nerd tree
+  noremap <leader>d :execute 'NERDTreeToggle ' . getcwd()<CR>
 
 " numbers.vim
-nnoremap <F3> :NumbersToggle<CR>
+  " toggle
+  nnoremap <F3> :NumbersToggle<CR>
 
 " system clipboard interaction
 " From https://github.com/henrik/dotfiles/blob/master/vim/config/mappings.vim
@@ -186,8 +174,8 @@ noremap <leader>P :set paste<CR>"*P<CR>:set nopaste<CR>
 " delete trailing whitespace
 nnoremap <leader>w :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar>:nohl<CR>
 
-" keep 3 extra lines when scrolling
-set scrolloff=3
+" keep 2 extra lines when scrolling
+set scrolloff=2
 
 " set column so we know when we've reached 80 characters on a line
 set colorcolumn=81
@@ -203,7 +191,7 @@ let g:indent_guides_start_level = 2
 let g:indent_guides_guide_size  = 1
 
 " powerline fanciness
-let g:Powerline_symbols = 'fancy'
+let g:Powerline_symbols = 'unicode'
 
 " shortcut for ack
 nnoremap <leader>a :Ack!<space>

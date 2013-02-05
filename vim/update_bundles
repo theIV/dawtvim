@@ -1,19 +1,16 @@
 #!/usr/bin/env ruby
+# encoding: utf-8
 
 # http://tammersaleh.com/posts/the-modern-vim-config-with-pathogen
 
 git_bundles = %w(
   godlygeek/tabular
-  msanders/snipmate.vim
   scrooloose/nerdtree
   scrooloose/nerdcommenter
-  scrooloose/snipmate-snippets
-  timcharper/textile.vim
   tpope/vim-cucumber
   tpope/vim-haml
   tpope/vim-markdown
   tpope/vim-rails
-  tpope/vim-repeat
   tpope/vim-surround
   tpope/vim-vividchalk
   Raimondi/delimitMate
@@ -21,23 +18,19 @@ git_bundles = %w(
   kana/vim-textobj-user
   nelstrom/vim-textobj-rubyblock
   mileszs/ack.vim
-  nathanaelkane/vim-indent-guides
   theIV/twerth-colors
   altercation/vim-colors-solarized
-  mattn/gist-vim
   ervandew/supertab
   majutsushi/tagbar
-  Lokaltog/vim-powerline
+  Lokaltog/powerline
   sickill/vim-pasta
   vim-scripts/L9
-  vim-scripts/minibufexpl.vim
   vim-scripts/jQuery
   vim-scripts/ActionScript
   vim-scripts/JSON.vim
   theIV/vim-tomdoc
   kchmck/vim-coffee-script
   kien/ctrlp.vim
-  vim-scripts/VimClojure
   myusuf3/numbers.vim
 )
 
