@@ -186,12 +186,5 @@ runtime macros/matchit.vim
 autocmd BufRead *_spec.rb syn keyword rubyRspec describe context it specify it_should_behave_like before after setup subject
 highlight def link rubyRspec Function
 
-" indent guides sizing
-let g:indent_guides_start_level = 2
-let g:indent_guides_guide_size  = 1
-
-" powerline fanciness
-let g:Powerline_symbols = 'unicode'
-
 " shortcut for ack
 nnoremap <leader>a :Ack!<space>

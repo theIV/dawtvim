@@ -22,7 +22,6 @@ git_bundles = %w(
   altercation/vim-colors-solarized
   ervandew/supertab
   majutsushi/tagbar
-  Lokaltog/powerline
   sickill/vim-pasta
   vim-scripts/L9
   vim-scripts/jQuery
