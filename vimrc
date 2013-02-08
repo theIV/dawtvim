@@ -4,8 +4,8 @@ set laststatus=2    " always show the statusline
 filetype plugin indent on
 syntax enable
 
-call pathogen#helptags()
-call pathogen#runtime_append_all_bundles()
+execute pathogen#infect()
+execute pathogen#helptags()
 
 " As a nice alternate, when you are feeling flirty:
 " http://www.google.com/webfonts/family?family=Lekton&subset=latin
