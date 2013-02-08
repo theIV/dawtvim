@@ -81,6 +81,7 @@ compiler ruby
 augroup filetypes
   au!
   au FileType ruby,haml,eruby,yaml
+  au BufNewFile,BufRead *.coffee setlocal filetype=coffee
   au BufNewFile,BufRead *.liquid setlocal filetype=liquid
   au BufNewFile,BufRead *.js setlocal filetype=javascript.jquery
   au BufNewFile,BufRead *.as setlocal filetype=actionscript
