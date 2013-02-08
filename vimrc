@@ -27,6 +27,16 @@ let maplocalleader = '\'
 " set cursorline
 set lines=25 columns=90
 set number
+
+" keep 2 extra lines when scrolling
+set scrolloff=2
+
+" set column so we know when we've reached 80 characters on a line
+set colorcolumn=81
+
+" set leading
+set linespace=3
+
 " begone, evil scrollbars
 set go-=T
 set go-=l
@@ -173,12 +183,6 @@ noremap <leader>P :set paste<CR>"*P<CR>:set nopaste<CR>
 
 " delete trailing whitespace
 nnoremap <leader>w :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar>:nohl<CR>
-
-" keep 2 extra lines when scrolling
-set scrolloff=2
-
-" set column so we know when we've reached 80 characters on a line
-set colorcolumn=81
 
 " load matchit
 runtime macros/matchit.vim
