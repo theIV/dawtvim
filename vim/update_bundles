@@ -31,6 +31,7 @@ git_bundles = %w(
   kchmck/vim-coffee-script
   kien/ctrlp.vim
   myusuf3/numbers.vim
+  Lokaltog/vim-easymotion
 )
 
 exclude_bundles = [
