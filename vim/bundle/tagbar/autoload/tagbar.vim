@@ -55,6 +55,7 @@ let s:new_window      = 1
 let s:is_maximized    = 0
 let s:short_help      = 1
 let s:window_expanded = 0
+let s:nearby_disabled = 0
 
 " Script-local variable needed since compare functions can't
 " take extra arguments
@@ -961,7 +962,7 @@ function! s:CreateAutocommands() abort
         autocmd BufEnter   __Tagbar__ nested call s:QuitIfOnlyWindow()
         autocmd CursorHold __Tagbar__ call s:ShowPrototype(1)
 
-        autocmd BufWritePost * call
+        autocmd BufReadPost,BufWritePost * call
                     \ s:AutoUpdate(fnamemodify(expand('<afile>'), ':p'), 1)
         autocmd BufEnter,CursorHold,FileType * call
                     \ s:AutoUpdate(fnamemodify(expand('<afile>'), ':p'), 0)
@@ -2412,6 +2413,13 @@ function! s:RenderContent(...) abort
     else
         let in_tagbar = 0
         let prevwinnr = winnr()
+
+        " Get the previous window number, so that we can reproduce
+        " the window entering history later. Do not run autocmd on
+        " this command, make sure nothing is interfering.
+        call s:winexec('noautocmd wincmd p')
+        let pprevwinnr = winnr()
+
         call s:winexec(tagbarwinnr . 'wincmd w')
     endif
 
@@ -2475,6 +2483,7 @@ function! s:RenderContent(...) abort
     let &eventignore = eventignore_save
 
     if !in_tagbar
+        call s:winexec(pprevwinnr . 'wincmd w')
         call s:winexec(prevwinnr . 'wincmd w')
     endif
 endfunction
@@ -2612,11 +2621,10 @@ function! s:PrintTag(tag, depth, fileinfo, typeinfo) abort
                 " are not scope-defining tags (since those already have an
                 " identifier)
                 if !has_key(a:typeinfo.kind2scope, ckind.short)
-                    let indent  = g:tagbar_indent
+                    let indent  = (a:depth + 1) * g:tagbar_indent
                     let indent += g:tagbar_show_visibility
                     let indent += 1 " fold symbol
-                    silent put =repeat(' ', (a:depth + 1) * indent)
-                              \ . '[' . ckind.long . ']'
+                    silent put =repeat(' ', indent) . '[' . ckind.long . ']'
                     " Add basic tag to allow folding when on the header line
                     let headertag = s:BaseTag.New(ckind.long)
                     let headertag.parent = a:tag
@@ -3061,6 +3069,7 @@ function! s:AutoUpdate(fname, force) abort
     " Don't do anything if the file isn't supported
     if !s:IsValidFile(a:fname, sftype)
         call s:LogDebugMessage('Not a valid file, stopping processing')
+        let s:nearby_disabled = 1
         return
     endif
 
@@ -3104,7 +3113,9 @@ function! s:AutoUpdate(fname, force) abort
     " Display the tagbar content if the tags have been updated or a different
     " file is being displayed
     if bufwinnr('__Tagbar__') != -1 &&
-     \ (s:new_window || updated || a:fname != s:known_files.getCurrent().fpath)
+     \ (s:new_window || updated ||
+      \ (!empty(s:known_files.getCurrent()) &&
+       \ a:fname != s:known_files.getCurrent().fpath))
         call s:RenderContent(fileinfo)
     endif
 
@@ -3113,6 +3124,7 @@ function! s:AutoUpdate(fname, force) abort
     if !empty(fileinfo)
         call s:LogDebugMessage('Setting current file [' . a:fname . ']')
         call s:known_files.setCurrent(fileinfo)
+        let s:nearby_disabled = 0
     endif
 
     call s:HighlightTag(0)
@@ -3257,6 +3269,10 @@ endfunction
 " s:GetNearbyTag() {{{2
 " Get the tag info for a file near the cursor in the current file
 function! s:GetNearbyTag(all, ...) abort
+    if s:nearby_disabled
+        return {}
+    endif
+
     let fileinfo = s:known_files.getCurrent()
     if empty(fileinfo)
         return {}
@@ -3334,6 +3350,11 @@ function! s:IsValidFile(fname, ftype) abort
         return 0
     endif
 
+    if &previewwindow
+        call s:LogDebugMessage('In preview window')
+        return 0
+    endif
+
     if !has_key(s:known_types, a:ftype)
         if exists('g:tagbar_type_' . a:ftype)
             " Filetype definition must have been specified in an 'ftplugin'
@@ -3350,18 +3371,53 @@ endfunction
 
 " s:QuitIfOnlyWindow() {{{2
 function! s:QuitIfOnlyWindow() abort
-    " Check if there is more than window
-    if winbufnr(2) == -1
+    " Check if there is more than one window
+    if s:NextNormalWindow() == -1
         " Check if there is more than one tab page
         if tabpagenr('$') == 1
             " Before quitting Vim, delete the tagbar buffer so that
             " the '0 mark is correctly set to the previous buffer.
-            bdelete
-            quitall
+            " Also disable autocmd on this command to avoid unnecessary
+            " autocmd nesting.
+            if winnr('$') == 1
+                noautocmd bdelete
+            endif
+            quit
         else
             close
         endif
     endif
+endfunction
+
+" s:NextNormalWindow() {{{2
+function! s:NextNormalWindow() abort
+    for i in range(1, winnr('$'))
+        let buf = winbufnr(i)
+
+        " skip unlisted buffers
+        if buflisted(buf) == 0
+            continue
+        endif
+
+        " skip un-modifiable buffers
+        if getbufvar(buf, '&modifiable') != 1
+            continue
+        endif
+
+        " skip temporary buffers with buftype set
+        if getbufvar(buf, '&buftype') != ''
+            continue
+        endif
+
+        " skip current window
+        if i == winnr()
+            continue
+        endif
+
+        return i
+    endfor
+
+    return -1
 endfunction
 
 " s:winexec() {{{2
