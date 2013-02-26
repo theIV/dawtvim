@@ -76,6 +76,10 @@ nnoremap <leader>l :set list!<CR>
 " These are pretty cute so you can see what's going on
 set lcs=trail:·,tab:▸\ ,eol:¬,extends:>,precedes:<,nbsp:&
 
+" status line from gary bernhardt
+" https://github.com/garybernhardt/dotfiles/blob/master/.vimrc
+set statusline=%<%f\ (%{&ft})\ %-4(%m%)%=%-19(%3l,%02c%03V%)
+
 compiler ruby
 
 augroup filetypes
