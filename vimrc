@@ -84,14 +84,13 @@ compiler ruby
 
 augroup filetypes
   au!
-  au FileType ruby,haml,eruby,yaml
   au BufNewFile,BufRead *.coffee setlocal filetype=coffee
   au BufNewFile,BufRead *.liquid setlocal filetype=liquid
   au BufNewFile,BufRead *.js setlocal filetype=javascript.jquery
   au BufNewFile,BufRead *.as setlocal filetype=actionscript
-  "au FileType ruby set omnifunc=rubycomplete#Complete
   au FileType javascript set autoindent expandtab omnifunc=javascriptcomplete#CompleteJS
   au FileType html set autoindent expandtab omnifunc=htmlcomplete#CompleteTags
+  "au FileType ruby set omnifunc=rubycomplete#Complete
 augroup END
 
 augroup filetype_css
