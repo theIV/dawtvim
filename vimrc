@@ -144,6 +144,15 @@ nnoremap <leader>s :split<CR> <C-w><C-w>
 
 " TagBar
   let g:tagbar_ctags_bin = "/Users/frecial/Developer/bin/ctags"
+  " https://gist.github.com/Phize/1527856
+  let g:tagbar_type_css = {
+  \ 'ctagstype' : 'Css',
+      \ 'kinds'     : [
+          \ 'c:classes',
+          \ 's:selectors',
+          \ 'i:identities'
+      \ ]
+  \ }
   " toggle
   nnoremap <leader>t :TagbarToggle<CR>
 
