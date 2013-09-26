@@ -34,6 +34,7 @@ git_bundles = %w(
   Lokaltog/vim-easymotion
   othree/html5.vim
   slim-template/vim-slim
+  vim-scripts/scratch.vim
 )
 
 exclude_bundles = [
