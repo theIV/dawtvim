@@ -1,9 +1,9 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " File:           numbers.vim
 " Maintainer:     Mahdi Yusuf yusuf.mahdi@gmail.com
-" Version:        0.5.0
+" Version:        0.6.0
 " Description:    vim global plugin for better line numbers.
-" Last Change:    12 August, 2013
+" Last Change:    15 September, 2013
 " License:        MIT License
 " Location:       plugin/numbers.vim
 " Website:        https://github.com/myusuf3/numbers.vim
@@ -23,6 +23,10 @@ let g:loaded_numbers = 1
 
 if (!exists('g:enable_numbers'))
     let g:enable_numbers = 1
+endif
+
+if (!exists('g:numbers_exclude'))
+    let g:numbers_exclude = ['unite', 'tagbar', 'startify', 'gundo', 'vimshell', 'w3m']
 endif
 
 if v:version < 703 || &cp
@@ -75,6 +79,10 @@ function! ResetNumbers()
     else
         call NumbersRelativeOff()
     end
+    if index(g:numbers_exclude, &ft) >= 0
+        setlocal norelativenumber
+        setlocal nonumber
+    endif
 endfunc
 
 function! Center()
