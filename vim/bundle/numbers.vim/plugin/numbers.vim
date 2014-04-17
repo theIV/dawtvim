@@ -1,7 +1,7 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " File:           numbers.vim
 " Maintainer:     Mahdi Yusuf yusuf.mahdi@gmail.com
-" Version:        0.6.0
+" Version:        0.6.1
 " Description:    vim global plugin for better line numbers.
 " Last Change:    15 September, 2013
 " License:        MIT License
@@ -26,7 +26,7 @@ if (!exists('g:enable_numbers'))
 endif
 
 if (!exists('g:numbers_exclude'))
-    let g:numbers_exclude = ['unite', 'tagbar', 'startify', 'gundo', 'vimshell', 'w3m']
+    let g:numbers_exclude = ['unite', 'tagbar', 'startify', 'gundo', 'vimshell', 'w3m', 'nerdtree']
 endif
 
 if v:version < 703 || &cp

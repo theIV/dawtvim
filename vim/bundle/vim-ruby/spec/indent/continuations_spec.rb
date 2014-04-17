@@ -1,6 +1,22 @@
 require 'spec_helper'
 
 describe "Indenting" do
+  specify "method chaining" do
+    assert_correct_indenting <<-EOF
+      some_object.
+        method_one.
+        method_two.
+        method_three
+    EOF
+
+    assert_correct_indenting <<-EOF
+      some_object
+        .method_one
+        .method_two
+        .method_three
+    EOF
+  end
+
   specify "arrays" do
     assert_correct_indenting <<-EOF
       foo = [one,
@@ -68,10 +84,31 @@ describe "Indenting" do
   end
 
   specify "string interpolation" do
-    # See https://github.com/vim-ruby/vim-ruby/issues/93 for details
+    # For details, see:
+    #
+    #   https://github.com/vim-ruby/vim-ruby/issues/93
+    #   https://github.com/vim-ruby/vim-ruby/issues/160
+    #
     assert_correct_indenting <<-EOF
       command = %|\#{file}|
       settings.log.info("Returning: \#{command}")
+    EOF
+
+    assert_correct_indenting <<-EOF
+      {
+        thing: "[\#{}]",
+        thong: "b"
+      }
+    EOF
+
+    assert_correct_indenting <<-EOF
+      {
+        a: "(\#{a})",
+        b: "(\#{b})",
+        c: "(c)",
+        d: "(d)",
+        e: "(e)",
+      }
     EOF
   end
 

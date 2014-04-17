@@ -81,30 +81,16 @@ selection inwards by repeating `ir`.
 Development
 ===========
 
-Specs are currently broken. :-/
-
 Running the specs
 -----------------
 
-To run the specs, you call vspec as follows:
+Set up the testing environment by running this command from the project root:
 
-    vspec {input-script} [{non-standard-runtimepath} ...]
+    bundle install
 
-In this case, the non-standard runtimepath must include the vspec plugin, the textobj-user plugin (which is a dependency for this plugin) and this plugin.
+Then you can run the tests with rake:
 
-Assuming you use [pathogen][] to manage your plugins, then the plugins required to run the test suite will be found in the following locations:
-
-    ~/dotfiles
-              /vim
-                  /bundle
-                         /textobj-user
-                         /textobj-rubyblock
-                         /vspec
-
-So to run the `basic.input` tests, you would run:
-
-    cd ~/dotfiles/vim/bundle/textobj-rubyblock
-    ../vspec/bin/vspec test/basic.input ../vspec/ ../textobj-user/ .
+    bundle exec rake test
 
 Generating a vimball
 --------------------
