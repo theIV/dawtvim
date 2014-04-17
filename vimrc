@@ -10,7 +10,8 @@ execute pathogen#helptags()
 " As a nice alternate, when you are feeling flirty:
 " http://www.google.com/webfonts/family?family=Lekton&subset=latin
 " set guifont=Lekton:h14
-set guifont=Menlo:h16
+" set guifont=Menlo:h16
+set guifont=Fantasque\ Sans\ Mono:h18
 
 " no tabs, 2 spaces
 set tabstop=2
