@@ -38,6 +38,8 @@ git_bundles = %w(
   vim-scripts/css_color.vim
   skammer/vim-css-color
   hail2u/vim-css3-syntax
+  derekwyatt/vim-scala
+  empanda/vim-varnish
 )
 
 exclude_bundles = [
