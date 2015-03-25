@@ -138,7 +138,7 @@ augroup cursorline
 augroup END
 
 " colorschemin'
-colorscheme aftereight
+colorscheme smyck
 
 " window splitting mappings
 nnoremap <leader>v :vsplit<CR> <C-w><C-w>
