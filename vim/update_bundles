@@ -44,7 +44,8 @@ git_bundles = %w(
 
 exclude_bundles = [
   'vim-colors-olauzon',
-  'processing'
+  'processing',
+  'vim-smyck'
 ]
 
 require 'fileutils'
