@@ -12,7 +12,7 @@ execute pathogen#helptags()
 " set guifont=Lekton:h14
 " set guifont=Menlo:h16
 " set guifont=Fantasque\ Sans\ Mono:h18
-set guifont=Inconsolata:h13
+set guifont=Inconsolata:h16
 
 " no tabs, 2 spaces
 set tabstop=2
