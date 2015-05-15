@@ -1,18 +1,20 @@
-set encoding=utf-8  " always roll utf-8
-set laststatus=2    " always show the statusline
-
-filetype plugin indent on
-syntax enable
+set nocp
 
 execute pathogen#infect()
 execute pathogen#helptags()
+
+filetype plugin indent on
+syntax on
+
+set encoding=utf-8  " always roll utf-8
+set laststatus=2    " always show the statusline
 
 " As a nice alternate, when you are feeling flirty:
 " http://www.google.com/webfonts/family?family=Lekton&subset=latin
 " set guifont=Lekton:h14
 " set guifont=Menlo:h16
 " set guifont=Fantasque\ Sans\ Mono:h18
-set guifont=Inconsolata:h16
+set guifont=Lekton:h16
 
 " no tabs, 2 spaces
 set tabstop=2
@@ -27,7 +29,7 @@ let mapleader = ','
 let maplocalleader = '\'
 
 " set cursorline
-set lines=25 columns=90
+"set lines=25 columns=90
 set number
 
 " keep 2 extra lines when scrolling
