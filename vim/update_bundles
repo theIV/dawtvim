@@ -7,7 +7,6 @@ git_bundles = %w(
   godlygeek/tabular
   scrooloose/nerdtree
   scrooloose/nerdcommenter
-  tpope/vim-cucumber
   tpope/vim-haml
   tpope/vim-markdown
   tpope/vim-rails
@@ -25,20 +24,15 @@ git_bundles = %w(
   sickill/vim-pasta
   vim-scripts/L9
   vim-scripts/jQuery
-  vim-scripts/ActionScript
   vim-scripts/JSON.vim
   theIV/vim-tomdoc
-  kchmck/vim-coffee-script
   kien/ctrlp.vim
   myusuf3/numbers.vim
   Lokaltog/vim-easymotion
   othree/html5.vim
   slim-template/vim-slim
   vim-scripts/scratch.vim
-  vim-scripts/css_color.vim
-  skammer/vim-css-color
   hail2u/vim-css3-syntax
-  derekwyatt/vim-scala
   empanda/vim-varnish
 )
 

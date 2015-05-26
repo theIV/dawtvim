@@ -1,7 +1,6 @@
 "=============================================================================
 " FILE: autoload/EasyMotion/helper.vim
 " AUTHOR: haya14busa
-" Last Change: 17 Mar 2014.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -153,7 +152,7 @@ if exists('*strchars')
     endfunction
 else
     function! EasyMotion#helper#strchars(str)
-        return strlen(substitute(str, ".", "x", "g"))
+        return strlen(substitute(a:str, ".", "x", "g"))
     endfunction
 endif "}}}
 function! EasyMotion#helper#include_multibyte_char(str) "{{{

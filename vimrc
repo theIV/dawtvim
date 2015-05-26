@@ -1,13 +1,13 @@
-set nocp
+set encoding=utf-8  " always roll utf-8
+set laststatus=2    " always show the statusline
+
+filetype plugin indent on
+syntax enable
+
+"set nocp
 
 execute pathogen#infect()
 execute pathogen#helptags()
-
-filetype plugin indent on
-syntax on
-
-set encoding=utf-8  " always roll utf-8
-set laststatus=2    " always show the statusline
 
 " As a nice alternate, when you are feeling flirty:
 " http://www.google.com/webfonts/family?family=Lekton&subset=latin
@@ -23,6 +23,8 @@ set shiftwidth=2
 set autoindent
 set smarttab
 set expandtab
+
+set backspace=indent,eol,start
 
 " map our leader
 let mapleader = ','
@@ -97,39 +99,6 @@ augroup filetypes
   "au FileType ruby set omnifunc=rubycomplete#Complete
 augroup END
 
-augroup filetype_css
-  au!
-  au BufNewFile,BufRead *.sass,*.scss setlocal filetype=sass
-
-  au Filetype sass,scss,css setlocal omnifunc=csscomplete#CompleteCSS
-  au Filetype sass,scss,css setlocal iskeyword+=-
-
-  " Use <localleader>S to sort properties.  Turns this:
-  "
-  "     p {
-  "         width: 200px;
-  "         height: 100px;
-  "         background: red;
-  "
-  "         ...
-  "     }
-  "
-  " into this:
-
-  "     p {
-  "         background: red;
-  "         height: 100px;
-  "         width: 200px;
-  "
-  "         ...
-  "     }
-  au BufNewFile,BufRead *.sass,*.scss,*.css nnoremap <buffer> <localleader>S ?{<CR>jV/\v^\s*\}?$<CR>k:sort<CR>:noh<CR>
-
-  " Make {<cr> insert a pair of brackets in such a way that the cursor is correctly
-  " positioned inside of them AND the following code doesn't get unfolded.
-  au BufNewFile,BufRead *.sass,*.scss,*.css inoremap <buffer> {<cr> {}<left><cr><space><space><space><space>.<cr><esc>kA<bs>
-augroup END
-
 " Only show cursorline in the current window and in normal mode.
 augroup cursorline
   au!
@@ -147,7 +116,7 @@ nnoremap <leader>v :vsplit<CR> <C-w><C-w>
 nnoremap <leader>s :split<CR> <C-w><C-w>
 
 " TagBar
-  let g:tagbar_ctags_bin = "/Users/frecial/Developer/bin/ctags"
+  let g:tagbar_ctags_bin = "/usr/local/bin/ctags"
   " https://gist.github.com/Phize/1527856
   let g:tagbar_type_css = {
   \ 'ctagstype' : 'Css',

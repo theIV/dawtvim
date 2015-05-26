@@ -28,7 +28,7 @@ if exists("loaded_matchit") && !exists("b:match_words")
 	\ ':' .
 	\ '\<\%(else\|elsif\|ensure\|when\|rescue\|break\|redo\|next\|retry\)\>' .
 	\ ':' .
-	\ '\<end\>' .
+        \ '\%(^\|[^.\:@$]\)\@<=\<end\:\@!\>' .
 	\ ',{:},\[:\],(:)'
 
   let b:match_skip =
@@ -190,7 +190,7 @@ if !exists("g:no_plugin_maps") && !exists("g:no_ruby_maps")
   endif
 
   if maparg("\<C-]>",'n') == ''
-    cnoremap <SID>foldopen <Bar>if &foldopen =~# 'tag'<Bar>exe 'norm! zv'<Bar>endif
+    cnoremap <buffer> <SID>foldopen <Bar>if &foldopen =~# 'tag'<Bar>exe 'norm! zv'<Bar>endif
     nnoremap <silent> <script> <buffer> <C-]>       :<C-U>exe  v:count1."tag <C-R>=RubyCursorIdentifier()<CR>"<SID>foldopen<CR>
     nnoremap <silent> <script> <buffer> g<C-]>      :<C-U>exe         "tjump <C-R>=RubyCursorIdentifier()<CR>"<SID>foldopen<CR>
     nnoremap <silent> <script> <buffer> g]          :<C-U>exe       "tselect <C-R>=RubyCursorIdentifier()<CR>"<SID>foldopen<CR>
@@ -277,12 +277,12 @@ function! RubyBalloonexpr()
 endfunction
 
 function! s:searchsyn(pattern,syn,flags,mode)
+  let cnt = v:count1
   norm! m'
   if a:mode ==# 'v'
     norm! gv
   endif
   let i = 0
-  let cnt = v:count ? v:count : 1
   while i < cnt
     let i = i + 1
     let line = line('.')

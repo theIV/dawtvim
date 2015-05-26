@@ -7,12 +7,15 @@ function! s:_vital_loaded(V)
 	let s:V = a:V
 	let s:String  = s:V.import("Over.String")
 	let s:Signals = s:V.import("Over.Signals")
+	let s:Input = s:V.import("Over.Input")
+	let s:Keymapping = s:V.import("Over.Keymapping")
 	let s:Module = s:V.import("Over.Commandline.Modules")
-	let s:List = s:V.import("Data.List")
 	let s:base.variables.modules = s:Signals.make()
 	function! s:base.variables.modules.get_slot(val)
 		return a:val.slot.module
 	endfunction
+
+	let s:Highlight = s:V.import("Palette.Highlight")
 endfunction
 
 
@@ -20,8 +23,10 @@ function! s:_vital_depends()
 	return [
 \		"Over.String",
 \		"Over.Signals",
+\		"Over.Input",
+\		"Over.Keymapping",
 \		"Over.Commandline.Modules",
-\		"Data.List",
+\		"Palette.Highlight",
 \	]
 endfunction
 
@@ -35,7 +40,7 @@ endfunction
 
 
 function! s:make_plain()
-	return deepcpy(s:base)
+	return deepcopy(s:base)
 endfunction
 
 
@@ -49,6 +54,7 @@ let s:base = {
 \		"exit" : 0,
 \		"keymapping" : {},
 \		"suffix" : "",
+\		"is_setted" : 0,
 \	},
 \	"highlights" : {
 \		"prompt" : "NONE",
@@ -85,8 +91,9 @@ function! s:base.setchar(char, ...)
 	" 1 の場合は既に設定されていても上書きする
 	" 0 の場合は既に設定されていれば上書きしない
 	let overwrite = get(a:, 1, 1)
-	if overwrite || self.variables.input == self.char()
+	if overwrite || self.variables.is_setted == 0
 		let self.variables.input = a:char
+		let self.variables.is_setted = 1
 	endif
 endfunction
 
@@ -168,6 +175,12 @@ function! s:base.backward()
 endfunction
 
 
+function! s:base.backward_word(...)
+	let pat = get(a:, 1, '\k\+\s*\|.')
+	return matchstr(self.backward(), '\%(' . pat . '\)$')
+endfunction
+
+
 function! s:base.connect(module, ...)
 	if type(a:module) == type("")
 		return call(self.connect, [s:Module.make(a:module)] + a:000, self)
@@ -213,10 +226,9 @@ endfunction
 
 
 function! s:base.cnoremap(lhs, rhs)
-	let self.variables.keymapping[a:lhs] = {
-\		"key"     : a:rhs,
-\		"noremap" : 1,
-\	}
+	let key = s:Keymapping.as_key_config(a:rhs)
+	let key.noremap = 1
+	let self.variables.keymapping[a:lhs] = key
 endfunction
 
 
@@ -314,7 +326,7 @@ function! s:base.get(...)
 	let Old_execute = self.execute
 	let self.execute = self.__empty
 	try
-		let exit_code = self.start()
+		let exit_code = call(self.start, a:000, self)
 		if exit_code == 0
 			return self.getline()
 		endif
@@ -325,16 +337,62 @@ function! s:base.get(...)
 endfunction
 
 
-function! s:base._init()
+function! s:base.input_key_stack()
+	return self.variables.input_key_stack
+endfunction
+
+
+function! s:base.input_key_stack_string()
+	return join(self.variables.input_key_stack, "")
+endfunction
+
+
+function! s:base.set_input_key_stack(stack)
+	let self.variables.input_key_stack = a:stack
+	return self.variables.input_key_stack
+endfunction
+
+
+function! s:base._init_variables()
 	let self.variables.tap_key = ""
 	let self.variables.char = ""
 	let self.variables.input = ""
 	let self.variables.exit = 0
 	let self.variables.exit_code = 1
 	let self.variables.enable_keymapping = 1
+	let self.variables.input_key_stack = []
+	let self.line = deepcopy(s:String.make())
+endfunction
+
+
+function! s:_is_valid_highlight(name)
+	let highlight = s:Highlight.get(a:name)
+	if empty(highlight)
+		return 0
+	endif
+
+	if has("gui_running")
+\	&& (has_key(highlight, "guifg") || has_key(highlight, "guibg"))
+		return 1
+	elseif (has_key(highlight, "ctermfg") || has_key(highlight, "ctermbg"))
+		return 1
+	endif
+	return 0
+endfunction
+
+
+function! s:base._init()
+	call self._init_variables()
 	call self.hl_cursor_off()
 	if !hlexists(self.highlights.cursor)
-		execute "highlight link " . self.highlights.cursor . " Cursor"
+		if s:_is_valid_highlight("Cursor")
+			execute "highlight link " . self.highlights.cursor . " Cursor"
+		else
+			" Workaround by CUI Vim Cursor Highlight
+			" issues #92
+			" https://github.com/osyo-manga/vital-over/issues/92
+			execute "highlight " . self.highlights.cursor . " term=reverse cterm=reverse gui=reverse"
+		endif
 	endif
 	if !hlexists(self.highlights.cursor_on)
 		execute "highlight link " . self.highlights.cursor_on . " " . self.highlights.cursor
@@ -360,43 +418,110 @@ function! s:base._execute(command)
 endfunction
 
 
+function! s:base._input_char(char)
+	let char = a:char
+	let self.variables.input_key = char
+	let self.variables.char = char
+	call self.setchar(self.variables.char)
+	let self.variables.is_setted = 0
+	call self.callevent("on_char_pre")
+	call self.insert(self.variables.input)
+	call self.callevent("on_char")
+endfunction
+
+
 function! s:base._input(input, ...)
+	if a:input == ""
+		return
+	endif
+
 	let self.variables.input_key = a:input
+	if a:0 == 0
+		let keymapping = self._get_keymapping()
+	else
+		let keymapping = a:1
+	endif
 	if self.is_enable_keymapping()
-		let key = s:_unmap(self._get_keymapping(), a:input)
+		let key = s:Keymapping.unmapping(keymapping, a:input)
 	else
 		let key = a:input
 	endif
+	if key == ""
+		return
+	endif
 
-	for char in s:_split_keys(key)
-		let self.variables.input_key = char
-		let self.variables.char = char
-		call self.setchar(self.variables.char)
-		call self.callevent("on_char_pre")
-		call self.insert(self.variables.input)
-		call self.callevent("on_char")
-	endfor
+	call self.set_input_key_stack(s:String.split_by_keys(key))
+	while !(empty(self.input_key_stack()) || self._is_exit())
+		call self._input_char(remove(self.input_key_stack(), 0))
+	endwhile
+endfunction
+
+
+function! s:is_input_waiting(keymapping, input)
+	let num = len(filter(copy(a:keymapping), 'stridx(v:key, a:input) == 0'))
+	return num > 1 || (num == 1 && !has_key(a:keymapping, a:input))
+endfunction
+
+
+function! s:base._inputting()
+	if !self.is_enable_keymapping()
+		return self._input(s:Input.getchar())
+	endif
+
+	let input = s:Input.getchar()
+	let old_line = self.getline()
+	let old_pos  = self.getpos()
+	let old_forward = self.forward()
+	let old_backward = self.backward()
+	let keymapping = self._get_keymapping()
+	try
+		let t = reltime()
+		while s:is_input_waiting(keymapping, input)
+\		&& str2nr(reltimestr(reltime(t))) * 1000 < &timeoutlen
+			call self.setline(old_backward . input . old_forward)
+			call self.setpos(old_pos)
+			call self.draw()
+			let input .= s:Input.getchar(0)
+		endwhile
+	finally
+		call self.setline(old_line)
+		call self.setpos(old_pos)
+	endtry
+	call self._input(input, keymapping)
+endfunction
+
+
+function! s:base._update()
+" 	call self.callevent("on_update")
+" 	if !getchar(1)
+" 		continue
+" 	endif
+"
+" 	call self._input(s:getchar(0))
+" 	call self.draw()
+
+	call self.callevent("on_update")
+	call self._inputting()
+" 	call self._input(s:Input.getchar())
+	if self._is_exit()
+		return -1
+	endif
+	call self.draw()
 endfunction
 
 
 function! s:base._main(...)
 	try
 		call self._init()
-		let self.line = deepcopy(s:String.make(get(a:, 1, "")))
 		call self.callevent("on_enter")
 
+		call self._input(get(a:, 1, ""))
 		call self.draw()
 		while !self._is_exit()
 			try
-" 				call self.callevent("on_update")
-" 				if !getchar(1)
-" 					continue
-" 				endif
-"
-" 				call self._input(s:_getchar(0))
-" 				call self.draw()
-				call self._input(s:_getchar())
-				call self.draw()
+				if self._update()
+					break
+				endif
 			catch
 				call self.callevent("on_exception")
 			endtry
@@ -422,35 +547,6 @@ function! s:base._is_exit()
 endfunction
 
 
-function! s:_as_key_config(config)
-	let base = {
-\		"noremap" : 0,
-\		"lock"    : 0,
-\	}
-	return type(a:config) == type({}) ? extend(base, a:config)
-\		 : extend(base, {
-\		 	"key" : a:config,
-\		 })
-endfunction
-
-
-function! s:_unmap(mapping, key)
-	let keys = s:_split_keys(a:key)
-	if len(keys) > 1
-		return join(map(keys, 's:_unmap(a:mapping, v:val)'), '')
-	endif
-	if !has_key(a:mapping, a:key)
-		return a:key
-	endif
-	let rhs  = s:_as_key_config(a:mapping[a:key])
-	let next = s:_as_key_config(get(a:mapping, rhs.key, {}))
-	if rhs.noremap && next.lock == 0
-		return rhs.key
-	endif
-	return s:_unmap(a:mapping, rhs.key)
-endfunction
-
-
 function! s:base._get_keymapping()
 	let result = {}
 " 	for module in values(self.variables.modules)
@@ -464,152 +560,6 @@ function! s:base._get_keymapping()
 	return extend(extend(result, self.variables.keymapping), self.keymapping())
 endfunction
 
-
-function! s:_getchar(...)
-	let char = call("getchar", a:000)
-	return type(char) == type(0) ? nr2char(char) : char
-endfunction
-
-
-
-function! s:_split(str, pat)
-	let pat = '\%#=2' . a:pat
-	let list = split(a:str,  pat . '\zs')
-	return s:List.flatten(map(list, 'v:val == a:pat ? a:pat : v:val =~ pat . ''$'' ? split(v:val, pat) + [a:pat] : v:val'))
-endfunction
-
-
-function! s:_split_keystring(str, pats, ...)
-	if a:str =~ '^<Over>(.\{-})$'
-\	|| a:str =~ "^\<Plug>(.\\{-})$"
-		return [a:str]
-	endif
-	let pats = a:pats
-	let index = get(a:, 1, 0)
-	if !exists("+regexpengine")
-\	|| index > len(pats)
-\	|| len(filter(copy(pats), 'a:str =~ ''\%#=2'' . v:val')) == 0
-		if len(filter(copy(pats), 'a:str ==# v:val')) == 0
-			return split(a:str, '\zs')
-		else
-			return [a:str]
-		endif
-	endif
-	if len(filter(copy(pats), 'a:str == v:val')) == 1
-		return [a:str]
-	endif
-
-	let result = []
-	let pat = pats[index]
-	let list = s:_split(a:str, pat)
-	let result += eval(join(map(list, "s:_split_keystring(v:val, pats, index+1)"), "+"))
-	return result
-endfunction
-
-
-
-
-let s:special_keys = [
-\	"\<BS>",
-\	"\<Down>",
-\	"\<Up>",
-\	"\<Left>",
-\	"\<Right>",
-\	"\<Home>",
-\	"\<End>",
-\	"\<Insert>",
-\	"\<Delete>",
-\	"\<PageUp>",
-\	"\<PageDown>",
-\	"\<F1>",
-\	"\<F2>",
-\	"\<F3>",
-\	"\<F4>",
-\	"\<F5>",
-\	"\<F6>",
-\	"\<F7>",
-\	"\<F8>",
-\	"\<F9>",
-\	"\<F10>",
-\	"\<F11>",
-\	"\<F12>",
-\	"\<A-BS>",
-\	"\<A-Down>",
-\	"\<A-Up>",
-\	"\<A-Left>",
-\	"\<A-Right>",
-\	"\<A-Home>",
-\	"\<A-End>",
-\	"\<A-Insert>",
-\	"\<A-Delete>",
-\	"\<A-PageUp>",
-\	"\<A-PageDown>",
-\	"\<A-F1>",
-\	"\<A-F2>",
-\	"\<A-F3>",
-\	"\<A-F4>",
-\	"\<A-F5>",
-\	"\<A-F6>",
-\	"\<A-F7>",
-\	"\<A-F8>",
-\	"\<A-F9>",
-\	"\<A-F10>",
-\	"\<A-F11>",
-\	"\<A-F12>",
-\	"\<A-Tab>",
-\	"\<C-BS>",
-\	"\<C-Down>",
-\	"\<C-Up>",
-\	"\<C-Left>",
-\	"\<C-Right>",
-\	"\<C-Home>",
-\	"\<C-End>",
-\	"\<C-Insert>",
-\	"\<C-Delete>",
-\	"\<C-PageUp>",
-\	"\<C-PageDown>",
-\	"\<C-Tab>",
-\	"\<C-F1>",
-\	"\<C-F2>",
-\	"\<C-F3>",
-\	"\<C-F4>",
-\	"\<C-F5>",
-\	"\<C-F6>",
-\	"\<C-F7>",
-\	"\<C-F8>",
-\	"\<C-F9>",
-\	"\<C-F10>",
-\	"\<C-F11>",
-\	"\<C-F12>",
-\	"\<S-Down>",
-\	"\<S-Up>",
-\	"\<S-Left>",
-\	"\<S-Right>",
-\	"\<S-Home>",
-\	"\<S-Insert>",
-\	"\<S-PageUp>",
-\	"\<S-PageDown>",
-\	"\<S-F1>",
-\	"\<S-F2>",
-\	"\<S-F3>",
-\	"\<S-F4>",
-\	"\<S-F5>",
-\	"\<S-F6>",
-\	"\<S-F7>",
-\	"\<S-F8>",
-\	"\<S-F9>",
-\	"\<S-F10>",
-\	"\<S-F11>",
-\	"\<S-F12>",
-\	"\<S-Tab>",
-\]
-
-" \	"\<S-Delete>", -> conflict with 4
-" \	"\<S-End>",    -> conflict with 7
-
-function! s:_split_keys(str)
-	return s:_split_keystring(a:str, s:special_keys)
-endfunction
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

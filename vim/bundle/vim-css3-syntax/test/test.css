@@ -62,7 +62,8 @@
 }
 
 .cascade {
-  all: unset;
+  all: initial;
+  display: unset;
 }
 
 .colors {
@@ -107,25 +108,60 @@
 @counter-style counter-style {
   system: cyclic;
   negative: symbolic;
-  prefix: numeric;
-  suffix: additive;
-  range: override;
-  pad: cjk-decimal;
-  fallback: disclosure-open;
-  symbols: disclosure-closed;
-  additive-symbols: simp-chinese-informal;
-  speak-as: simp-chinese-formal;
+  prefix: additive;
+  suffix: extends;
+  range: bullets;
+  pad: numbers;
+  fallback: words;
+  symbols: symbols("*" "\2020" "\2021" "\A7");
+  additive-symbols: auto;
+  speak-as: auto;
+}
+
+.counter-style {
+  display: arabic-indic;
+  display: upper-armenian;
+  display: lower-armenian;
+  display: bengali;
+  display: cambodian;
+  display: khmer;
+  display: cjk-decimal;
+  display: devanagari;
+  display: gujarati;
+  display: gurmukhi;
+  display: kannada;
+  display: lao;
+  display: malayalam;
+  display: mongolian;
+  display: myanmar;
+  display: oriya;
+  display: persian;
+  display: tamil;
+  display: telugu;
+  display: thai;
+  display: tibetan;
+  display: cjk-earthly-branch;
+  display: cjk-heavenly-stem;
+  display: disclosure-closed;
+  display: disclosure-open;
+  display: japanese-informal;
+  display: japanese-formal;
+  display: korean-hangul-formal;
+  display: korean-hanja-informal;
+  display: korean-hanja-formal;
+  display: simp-chinese-informal;
+  display: simp-chinese-formal;
   display: trad-chinese-informal;
   display: trad-chinese-formal;
   display: ethiopic-numeric;
-  display: symbols("*" "\2020" "\2021" "\A7");
 }
 
 .display {
   display-inside: block-level;
   display-outside: inline-level;
-  display-extras: inline-list-item;
-  display-box: contents;
+  display-list: contents;
+  display-suppress: inline-list-item;
+  display: show;
 }
 
 .exclusions {
@@ -141,7 +177,7 @@
   flex: column-reverse;
   flex-grow: wrap;
   flex-shrink: wrap-reverse;
-  flex-basis: auto;
+  flex-basis: main-size;
 }
 
 .fonts {
@@ -197,33 +233,23 @@
   display: closed;
 }
 
-.grid-layout {
+.grid {
   grid-template-columns: grid;
   grid-template-rows: inline-grid;
   grid-template-areas: minmax(0, 1);
   grid-template: repeat(4);
   grid-auto-columns: 0.2fr;
   grid-auto-rows: subgrid;
-  grid-auto-flow: rows;
-  grid-auto-position: columns;
-  grid: dense;
-  grid-row-start: span;
+  grid-auto-flow: dense;
+  grid-auto-position: span;
+  grid: auto;
+  grid-row-start: auto;
   grid-column-start: auto;
   grid-row-end: auto;
   grid-column-end: auto;
   grid-column: auto;
   grid-row: auto;
   grid-area: auto;
-}
-
-.hyperlinks {
-  target: current;
-  target-name: new;
-  target-new: modal;
-  target-position: window;
-  display: tab;
-  display: front;
-  display: back;
 }
 
 .images {
@@ -239,16 +265,17 @@
   display: repeating-radial-gradient(farthest-corner at 50% 50%, yellow, green);
 }
 
-.layout::slot(b) {
-  display: same;
+.inline {
+  initial-letter: ideographic;
+  initial-letter-align: auto;
 }
 
 .line-grid {
   line-grid: create;
-  line-snap: half-border;
-  line-slack: rounddown(1em);
-  box-snap: roundup(1em);
-  display: 10gd;
+  line-snap: block-start;
+  box-snap: block-end;
+  display: first-baseline;
+  display: last-baseline;
 }
 
 .linebox {
@@ -277,16 +304,6 @@
   marker-side: marker;
   counter-set: list-container;
   display: counters(list-item, '.');
-}
-
-.marquee {
-  marquee-direction: forward;
-  marquee-play-count: reverse;
-  marquee-speed: infinite;
-  marquee-style: slide;
-  display: alternate;
-  display: marquee-line;
-  display: marquee-block;
 }
 
 .masking {
@@ -339,8 +356,18 @@
   display: verso;
 }
 
-.preslev {
-  presentation-level: increment;
+.positioning {
+  offset-before: sticky;
+  offset-end: auto;
+  offset-after: auto;
+  offset-start: auto;
+}
+
+.pseudo::selection,
+.pseudo::spelling-error,
+.pseudo::grammer-error,
+.pseuod::placeholder {
+  display: block;
 }
 
 .regions:region {
@@ -352,9 +379,9 @@
 }
 
 .ruby {
+  ruby-position: ruby-base-container;
   ruby-merge: ruby-text-container;
   ruby-align: inter-character;
-  ruby-position: ruby-base-container;
 }
 
 @scope .scoping {
@@ -443,6 +470,14 @@
   display: contain-floats;
 }
 
+.snappoints {
+  scroll-snap-type: mandatory;
+  scroll-snap-points-x: proximity;
+  scroll-snap-points-y: auto;
+  scroll-snap-destination: auto;
+  scroll-snap-coordinate: auto;
+}
+
 .speech {
   voice-volume: 10dB;
   voice-balance: literal-punctuation;
@@ -525,16 +560,8 @@
 }
 
 .ui {
-  icon: active;
-  resize: inactive;
-  box-sizing: disabled;
-  ime-mode: root;
-  nav-index: horizontal;
-  nav-up: vertical;
-  nav-right: clip;
-  nav-down: ellipsis;
-  nav-left: auto;
-  outline-offset: auto;
+  caret-color: grab;
+  display: grabbing;
 }
 
 .values {
@@ -549,7 +576,6 @@
   display: 1dppx;
   display: calc(100%/3 - 2*1em - 2*1px);
   display: toggle(italic, normal);
-  display: initial;
 }
 
 .variables {

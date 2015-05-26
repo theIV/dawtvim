@@ -324,7 +324,7 @@ endif
 
 " Ref: http://dev.w3.org/html5/markup/
 " Version: Draft 05 April 2011
-let phrasing_elements = ['a', 'em', 'strong', 'small', 'mark', 'abbr', 'dfn', 'i', 'b', 'u', 'code', 'var', 'samp', 'kbd', 'sup', 'sub', 'q', 'cite', 'span', 'bdo', 'bdi', 'br', 'wbr', 'ins', 'del', 'img', 'embed', 'object', 'iframe', 'map', 'area', 'script', 'noscript', 'ruby', 'video', 'audio', 'input', 'textarea', 'select', 'button', 'label', 'output', 'datalist', 'keygen', 'progress', 'command', 'canvas', 'time', 'meter', 'data', 'content', 'shadow']
+let phrasing_elements = ['a', 'em', 'strong', 'small', 'mark', 'abbr', 'dfn', 'i', 'b', 'u', 'code', 'var', 'samp', 'kbd', 'sup', 'sub', 'q', 'cite', 'span', 'bdo', 'bdi', 'br', 'wbr', 'ins', 'del', 'img', 'picture', 'embed', 'object', 'iframe', 'map', 'area', 'script', 'noscript', 'ruby', 'video', 'audio', 'input', 'textarea', 'select', 'button', 'label', 'output', 'datalist', 'keygen', 'progress', 'command', 'canvas', 'time', 'meter', 'data', 'content', 'shadow']
 
 let metadata_elements = ['link', 'style', 'meta', 'script', 'noscript', 'command']
 
@@ -545,7 +545,7 @@ let g:xmldata_html5 = {
 \ ],
 \ 'iframe': [
     \ [],
-    \ extend(copy(global_attributes), {'src': [], 'name': [], 'width': [], 'height': [], 'sandbox': ['allow-same-origin', 'allow-forms', 'allow-scripts'], 'seamless': ['seamless', '']})
+    \ extend(copy(global_attributes), {'src': [], 'srcdoc': [], 'name': [], 'width': [], 'height': [], 'sandbox': ['allow-same-origin', 'allow-forms', 'allow-scripts'], 'seamless': ['seamless', '']})
 \ ],
 \ 'img': [
     \ [],
@@ -601,7 +601,7 @@ let g:xmldata_html5 = {
 \ ],
 \ 'meta': [
     \ [],
-    \ extend(copy(global_attributes), {'name': [], 'http-equiv': ['refresh', 'default-style', 'content-type'], 'content': [], 'charset': charset})
+    \ extend(copy(global_attributes), {'name': ['application-name', 'author', 'description', 'generator', 'referrer', 'creator', 'googlebot', 'publisher', 'robots', 'slurp', 'viewport', 'theme-color'], 'http-equiv': ['refresh', 'default-style', 'content-type'], 'content': [], 'charset': charset})
 \ ],
 \ 'meter': [
     \ phrasing_elements,
@@ -643,6 +643,10 @@ let g:xmldata_html5 = {
     \ [],
     \ extend(copy(global_attributes), {'name': [], 'value': []})
 \ ],
+\ 'picture': [
+    \ flow_elements + ['source'],
+    \ global_attributes
+\ ],
 \ 'pre': [
     \ phrasing_elements,
     \ global_attributes
@@ -655,6 +659,10 @@ let g:xmldata_html5 = {
     \ phrasing_elements,
     \ extend(copy(global_attributes), {'cite': []})
 \ ],
+\ 'rb': [
+    \ phrasing_elements,
+    \ global_attributes
+\ ],
 \ 'rp': [
     \ phrasing_elements,
     \ global_attributes
@@ -663,8 +671,12 @@ let g:xmldata_html5 = {
     \ phrasing_elements,
     \ global_attributes
 \ ],
-\ 'ruby': [
+\ 'rtc': [
     \ phrasing_elements + ['rp', 'rt'],
+    \ global_attributes
+\ ],
+\ 'ruby': [
+    \ phrasing_elements + ['rb', 'rp', 'rt', 'rtc'],
     \ global_attributes
 \ ],
 \ 'samp': [
@@ -693,7 +705,7 @@ let g:xmldata_html5 = {
 \ ],
 \ 'source': [
     \ [],
-    \ extend(copy(global_attributes), {'src': [], 'type': [], 'media': []})
+    \ extend(copy(global_attributes), {'src': [], 'type': [], 'media': [], 'srcset': [], 'sizes': []})
 \ ],
 \ 'span': [
     \ phrasing_elements,

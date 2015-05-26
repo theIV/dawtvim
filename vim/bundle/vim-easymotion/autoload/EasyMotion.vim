@@ -1,3 +1,4 @@
+scriptencoding utf-8
 " EasyMotion - Vim motions on speed!
 "
 " Author: Kim Silkebækken <kim.silkebaekken+vim@gmail.com>
@@ -5,7 +6,6 @@
 " Source: https://github.com/Lokaltog/vim-easymotion
 "=============================================================================
 " Saving 'cpoptions' {{{
-scriptencoding utf-8
 let s:save_cpo = &cpo
 set cpo&vim
 " }}}
@@ -49,7 +49,8 @@ function! EasyMotion#init()
     " 1 -> Cancel
     let g:EasyMotion_ignore_exception = 0
     return ""
-endfunction "}}}
+endfunction
+"}}}
 " Reset: {{{
 function! EasyMotion#reset()
     let s:flag = {
@@ -103,6 +104,7 @@ function! EasyMotion#reset()
         "   visualmode and 'n' key motion, this value could be different.
     return ""
 endfunction "}}}
+
 " Motion Functions: {{{
 " -- Find Motion -------------------------
 " Note: {{{
@@ -197,8 +199,9 @@ function! EasyMotion#JK(visualmode, direction) " {{{
     if g:EasyMotion_startofline
         call s:EasyMotion('^\(\w\|\s*\zs\|$\)', a:direction, a:visualmode ? visualmode() : '', 0)
     else
-        let prev_column = getpos('.')[2] - 1
-        call s:EasyMotion('^.\{,' . prev_column . '}\zs\(.\|$\)', a:direction, a:visualmode ? visualmode() : '', 0)
+        let c = col('.')
+        let pattern = printf('^.\{-}\zs\(\%%<%dv.\%%>%dv\|$\)', c + 1, c)
+        call s:EasyMotion(pattern, a:direction, a:visualmode ? visualmode() : '', 0)
     endif
     return s:EasyMotion_is_cancelled
 endfunction " }}}
@@ -215,9 +218,12 @@ function! EasyMotion#Eol(visualmode, direction) " {{{
     return s:EasyMotion_is_cancelled
 endfunction " }}}
 " -- Search Motion -----------------------
-function! EasyMotion#Search(visualmode, direction) " {{{
+function! EasyMotion#Search(visualmode, direction, respect_direction) " {{{
     let s:current.is_operator = mode(1) ==# 'no' ? 1: 0
-    call s:EasyMotion(@/, a:direction, a:visualmode ? visualmode() : '', 0)
+    let search_direction = a:respect_direction ?
+    \   (a:direction == 1 ? v:searchforward : 1-v:searchforward) :
+    \   (a:direction)
+    call s:EasyMotion(@/, search_direction, a:visualmode ? visualmode() : '', 0)
     return s:EasyMotion_is_cancelled
 endfunction " }}}
 " -- JumpToAnywhere Motion ---------------
@@ -283,7 +289,7 @@ function! EasyMotion#Repeat(visualmode) " {{{
     call s:EasyMotion(re, direction, a:visualmode ? visualmode() : '', is_inclusive)
     return s:EasyMotion_is_cancelled
 endfunction " }}}
-function! EasyMotion#DotRepeat(visualmode) " {{{
+function! EasyMotion#DotRepeat() " {{{
     let cnt = v:count1 " avoid overwriting
 
     " Repeat previous '.' motion with previous targets and operator
@@ -341,9 +347,12 @@ function! EasyMotion#NextPrevious(visualmode, direction) " {{{
     endif
 
     " Jump
-    for i in range(cnt)
+    " @vimlint(EVL102, 1, l:_)
+    for _ in range(cnt)
         keepjumps call searchpos(re, search_direction)
     endfor
+
+    normal! zv
 
     call EasyMotion#reset()
     " -- Activate EasyMotion ----------------- {{{
@@ -478,7 +487,7 @@ function! s:convertRegep(input) "{{{
     endif
 
     if s:should_use_smartsign(a:input)
-        let re = s:convertSmartsign(re, a:input)
+        let re = s:convertSmartsign(a:input)
     endif
 
     let case_flag = EasyMotion#helper#should_case_sensitive(
@@ -503,7 +512,7 @@ function! s:convertMigemo(re) "{{{
     endif
     return re
 endfunction "}}}
-function! s:convertSmartsign(re, chars) "{{{
+function! s:convertSmartsign(chars) "{{{
     " Convert given chars to smartsign string
     " Example: 12 -> [1!][2@]
     "          a] -> a[]}]
@@ -874,6 +883,7 @@ function! s:CreateCoordKeyDict(groups, ...)
 endfunction
 " }}}
 " }}}
+"}}}
 " Core Functions: {{{
 function! s:PromptUser(groups) "{{{
     " Recursive
@@ -896,6 +906,7 @@ function! s:PromptUser(groups) "{{{
 
     let coord_key_dict = s:CreateCoordKeyDict(a:groups)
 
+    let prev_col_num = 0
     for dict_key in sort(coord_key_dict[0])
         " NOTE: {{{
         " let g:EasyMotion_keys = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -946,8 +957,6 @@ function! s:PromptUser(groups) "{{{
         " Prepare marker characters {{{
         let marker_chars = coord_key_dict[1][dict_key]
         let marker_chars_len = EasyMotion#helper#strchars(marker_chars)
-        let marker_chars_first_byte_len = strlen(matchstr(marker_chars,
-                                                        \ '^.'))
         "}}}
 
         " Replace {target} with {marker} & Highlight {{{
@@ -1061,6 +1070,7 @@ function! s:PromptUser(groups) "{{{
         " Restore undo tree {{{
         if s:should_use_wundo() && filereadable(s:undo_file)
             silent execute "rundo" s:undo_file
+            call delete(s:undo_file)
             unlet s:undo_file
         else
             " Break undo history (undobreak)
@@ -1331,8 +1341,7 @@ function! s:EasyMotion(regexp, direction, visualmode, is_inclusive) " {{{
         " if you just use cursor(s:current.cursor_position) to jump back,
         " current line will become middle of line window
         if ! empty(a:visualmode)
-            keepjumps call cursor(win_first_line,0)
-            normal! zt
+            keepjumps call winrestview({'lnum' : win_first_line, 'topline' : win_first_line})
         else
             " for adjusting cursorline
             keepjumps call cursor(s:current.cursor_position)
@@ -1432,8 +1441,7 @@ function! s:EasyMotion(regexp, direction, visualmode, is_inclusive) " {{{
 
             " Adjust screen especially for visual scroll & offscreen search {{{
             " Otherwise, cursor line will move middle line of window
-            keepjumps call cursor(win_first_line, 0)
-            normal! zt
+            keepjumps call winrestview({'lnum' : win_first_line, 'topline' : win_first_line})
 
             " Jump to destination
             keepjumps call cursor(coords[0], coords[1])
@@ -1520,9 +1528,9 @@ function! s:EasyMotion(regexp, direction, visualmode, is_inclusive) " {{{
     endtry
 endfunction " }}}
 "}}}
-" Call Init: {{{
+" }}}
+
 call EasyMotion#init()
-"}}}
 " Restore 'cpoptions' {{{
 let &cpo = s:save_cpo
 unlet s:save_cpo
