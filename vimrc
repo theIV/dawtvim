@@ -30,8 +30,6 @@ set backspace=indent,eol,start
 let mapleader = ','
 let maplocalleader = '\'
 
-" set cursorline
-"set lines=25 columns=90
 set number
 
 " keep 2 extra lines when scrolling
@@ -93,7 +91,6 @@ augroup filetypes
   au BufNewFile,BufRead *.coffee setlocal filetype=coffee
   au BufNewFile,BufRead *.liquid setlocal filetype=liquid
   au BufNewFile,BufRead *.js setlocal filetype=javascript.jquery
-  au BufNewFile,BufRead *.as setlocal filetype=actionscript
   au FileType javascript set autoindent expandtab omnifunc=javascriptcomplete#CompleteJS
   au FileType html set autoindent expandtab omnifunc=htmlcomplete#CompleteTags
   "au FileType ruby set omnifunc=rubycomplete#Complete
@@ -109,7 +106,13 @@ augroup cursorline
 augroup END
 
 " colorschemin'
-colorscheme smyck
+colorscheme grb256
+
+" Move around splits with <c-hjkl>
+nnoremap <c-j> <c-w>j
+nnoremap <c-k> <c-w>k
+nnoremap <c-h> <c-w>h
+nnoremap <c-l> <c-w>l
 
 " window splitting mappings
 nnoremap <leader>v :vsplit<CR> <C-w><C-w>
@@ -142,7 +145,7 @@ inoremap <Down> <C-o>gj
 inoremap <Up> <C-o>gk
 
 " get the fuck out
-inoremap jk <esc>
+inoremap jj <esc>
 inoremap <esc> <nop>
 
 " go fullscreen
