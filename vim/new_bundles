@@ -1,0 +1,21 @@
+#!/usr/bin/env ruby
+# encoding: utf-8
+
+require 'fileutils'
+require 'open-uri'
+require 'yaml'
+
+bundles = YAML.load(File.read('./vim/bundle_list.yml'))['github_bundles']
+
+bundles_dir = File.join(File.dirname(__FILE__), "bundle")
+
+FileUtils.cd(bundles_dir)
+
+bundles.each do |bundle|
+  dir = bundle.split('/').last.downcase
+  unless File.directory?(dir)
+    puts "→ Unpacking #{bundle} into #{dir}"
+    `hub clone #{bundle} #{dir}`
+    FileUtils.rm_rf(File.join(dir, ".git"))
+  end
+end
