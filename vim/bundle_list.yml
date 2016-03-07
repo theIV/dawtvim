@@ -35,3 +35,4 @@ github_bundles:
   - vim-airline/vim-airline
   - elixir-lang/vim-elixir
   - chrisbra/csv.vim
+  - craigemery/vim-autotag
