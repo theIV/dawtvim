@@ -34,3 +34,4 @@ github_bundles:
   - airblade/vim-gitgutter
   - vim-airline/vim-airline
   - elixir-lang/vim-elixir
+  - chrisbra/csv.vim
