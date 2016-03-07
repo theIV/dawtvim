@@ -33,3 +33,4 @@ github_bundles:
   - quanganhdo/grb256
   - airblade/vim-gitgutter
   - vim-airline/vim-airline
+  - elixir-lang/vim-elixir
