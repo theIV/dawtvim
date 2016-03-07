@@ -145,7 +145,7 @@ inoremap <Down> <C-o>gj
 inoremap <Up> <C-o>gk
 
 " get the fuck out
-inoremap jj <esc>
+inoremap jk <esc>
 inoremap <esc> <nop>
 
 " go fullscreen
