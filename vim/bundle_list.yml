@@ -2,6 +2,7 @@ github_bundles:
   - godlygeek/tabular
   - scrooloose/nerdtree
   - scrooloose/nerdcommenter
+  - scrooloose/syntastic
   - tpope/vim-haml
   - tpope/vim-markdown
   - tpope/vim-rails
