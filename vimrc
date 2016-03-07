@@ -151,18 +151,20 @@ inoremap <esc> <nop>
 " go fullscreen
 nnoremap <leader>f :set invfullscreen<CR>
 
+let g:NERDTreeDirArrowExpandable = '±'
+let g:NERDTreeDirArrowCollapsible = '•'
 " NERDTree
-  " janus style
-  let NERDTreeDirArrows  = 1
-  let NERDTreeMouseMode  = 3
-  " hide hidden files...
-  let NERDTreeShowHidden = 0
-  " shortcut to toggle nerd tree
-  noremap <leader>d :execute 'NERDTreeToggle ' . getcwd()<CR>
+" janus style
+let NERDTreeDirArrows  = 1
+let NERDTreeMouseMode  = 3
+" hide hidden files...
+let NERDTreeShowHidden = 0
+" shortcut to toggle nerd tree
+noremap <leader>d :execute 'NERDTreeToggle ' . getcwd()<CR>
 
 " numbers.vim
-  " toggle
-  nnoremap <F3> :NumbersToggle<CR>
+" toggle
+nnoremap <F3> :NumbersToggle<CR>
 
 " system clipboard interaction
 " From https://github.com/henrik/dotfiles/blob/master/vim/config/mappings.vim
@@ -210,7 +212,7 @@ function! DoWindowSwap()
     " Switch to dest and shuffle source->dest
     exe curNum . "wincmd w"
     " Hide and open so that we aren't prompted and keep history
-    exe 'hide buf' markedBuf 
+    exe 'hide buf' markedBuf
 endfunction
 
 nmap <silent> <leader>mw :call MarkWindowSwap()<CR>
