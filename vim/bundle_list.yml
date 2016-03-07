@@ -12,7 +12,7 @@ github_bundles:
   - vim-ruby/vim-ruby
   - kana/vim-textobj-user
   - nelstrom/vim-textobj-rubyblock
-  - mileszs/ack.vim
+  - rking/ag.vim
   - theIV/twerth-colors
   - altercation/vim-colors-solarized
   - ervandew/supertab

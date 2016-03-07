@@ -200,7 +200,7 @@ autocmd BufRead *_spec.rb syn keyword rubyRspec describe context it specify it_s
 highlight def link rubyRspec Function
 
 " shortcut for ack
-nnoremap <leader>a :Ack!<space>
+nnoremap <leader>a :Ag!<space>
 
 " swap splits
 " courtesy of sgriffin on stackoverflow
