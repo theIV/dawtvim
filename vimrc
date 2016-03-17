@@ -6,7 +6,7 @@ syntax enable
 
 "set nocp
 
-source vim/plugins
+source ~/.vim/plugins
 
 " no tabs, 2 spaces
 set tabstop=2
