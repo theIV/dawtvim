@@ -37,4 +37,5 @@ Plug 'vim-airline/vim-airline'
 Plug 'elixir-lang/vim-elixir'
 Plug 'chrisbra/csv.vim'
 Plug 'craigemery/vim-autotag'
+Plug 'vimwiki/vimwiki'
 call plug#end()

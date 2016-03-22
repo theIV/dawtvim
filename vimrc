@@ -1,6 +1,7 @@
 set encoding=utf-8  " always roll utf-8
 set laststatus=2    " always show the statusline
 
+set nocompatible
 filetype plugin indent on
 syntax enable
 
