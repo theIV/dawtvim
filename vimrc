@@ -186,6 +186,9 @@ endif
 " delete trailing whitespace
 nnoremap <leader>w :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar>:nohl<CR>
 
+" swap 1.8 with 1.9 style hash-syntax
+nnoremap <leader>r :let _s=@/<Bar>:%s/:\([a-z\d_]\+\)\(\s*\)=>/\1:/g<Bar>:let @/=_s<Bar>:nohl<CR>
+
 " load matchit
 runtime macros/matchit.vim
 
