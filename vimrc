@@ -99,7 +99,7 @@ augroup cursorline
 augroup END
 
 " colorschemin'
-colorscheme grb256
+colorscheme vividchalk
 
 " Move around splits with <c-hjkl>
 nnoremap <c-j> <c-w>j
