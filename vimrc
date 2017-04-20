@@ -83,7 +83,6 @@ augroup filetypes
   au!
   au BufNewFile,BufRead *.coffee setlocal filetype=coffee
   au BufNewFile,BufRead *.liquid setlocal filetype=liquid
-  au BufNewFile,BufRead *.js setlocal filetype=javascript.jquery
   au FileType javascript set autoindent expandtab omnifunc=javascriptcomplete#CompleteJS
   au FileType html set autoindent expandtab omnifunc=htmlcomplete#CompleteTags
   "au FileType ruby set omnifunc=rubycomplete#Complete
