@@ -226,18 +226,24 @@ nmap <silent> <leader>mw :call MarkWindowSwap()<CR>
 nmap <silent> <leader>pw :call DoWindowSwap()<CR>
 
 " https://ttssh2.osdn.jp/manual/en/usage/tips/vim.html
-if &term =~ "xterm"
+if has("patch-8.0.0238")
+  " When below configuration is not set by using Bracketed Paste Mode supporting version(8.0.0238 or later),
+  " the Bracketed Paste Mode is used while TERM is xterm.
+  " When tmux is used, below configuration is needed because TERM is screen.
+  if &term =~ "screen"
     let &t_ti .= "\e[?2004h"
     let &t_te .= "\e[?2004l"
     let &pastetoggle = "\e[201~"
 
     function XTermPasteBegin(ret)
-        set paste
-        return a:ret
+      set paste
+      return a:ret
     endfunction
 
     noremap <special> <expr> <Esc>[200~ XTermPasteBegin("0i")
     inoremap <special> <expr> <Esc>[200~ XTermPasteBegin("")
+    vnoremap <special> <expr> <Esc>[200~ XTermPasteBegin("c")
     cnoremap <special> <Esc>[200~ <nop>
     cnoremap <special> <Esc>[201~ <nop>
+  endif
 endif
