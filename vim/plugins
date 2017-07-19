@@ -41,7 +41,6 @@ Plug 'craigemery/vim-autotag'
 Plug 'vimwiki/vimwiki'
 Plug 'janko-m/vim-test'
 Plug 'christoomey/vim-tmux-navigator'
-Plug 'edkolev/tmuxline.vim'
 Plug 'moll/vim-node'
 Plug 'jelera/vim-javascript-syntax'
 call plug#end()
