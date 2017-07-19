@@ -17,6 +17,8 @@ set autoindent
 set smarttab
 set expandtab
 
+set nolazyredraw
+
 set backspace=indent,eol,start
 
 " map our leader
@@ -163,8 +165,6 @@ let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 
-let g:airline_powerline_fonts = 1
-"let g:tmuxline_powerline_separators = 0
 
 " numbers.vim
 " toggle
