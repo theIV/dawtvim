@@ -50,19 +50,13 @@ set visualbell
 set hidden
 
 " searchin'
-" highlight search results
-set hlsearch
-" search as you type
-set incsearch
-" who cares what case you're searchin' for...
-set ignorecase
-" unless they contain at least one capital letter
-set smartcase
-" get rid of highlighting when we're done
-noremap <leader><space> :nohl<CR>
+set hlsearch                      " highlight results...
+set incsearch                     " and go as you type...
+set ignorecase                    " and who cares about capitals...
+set smartcase                     " unless there is one...
+noremap <leader><space> :nohl<CR> " and get rid of highlighting when we're done.
 
 set wildmode=list:longest
-
 set wildignore+=*.sw?     " Vim swap files
 set wildignore+=.DS_Store " You are the bane of my existence, .DS_Store.
 set wildignore+=tags      " Ignore tag files
@@ -81,15 +75,6 @@ set statusline=%<%f\ (%{&ft})\ %-4(%m%)%=%-19(%3l,%02c%03V%)
 
 compiler ruby
 
-augroup filetypes
-  au!
-  au BufNewFile,BufRead *.coffee setlocal filetype=coffee
-  au BufNewFile,BufRead *.liquid setlocal filetype=liquid
-  au FileType javascript set autoindent expandtab omnifunc=javascriptcomplete#CompleteJS
-  au FileType html set autoindent expandtab omnifunc=htmlcomplete#CompleteTags
-  "au FileType ruby set omnifunc=rubycomplete#Complete
-augroup END
-
 " Only show cursorline in the current window and in normal mode.
 augroup cursorline
   au!
@@ -100,31 +85,28 @@ augroup cursorline
 augroup END
 
 " colorschemin'
-colorscheme pablo
+colorscheme pencil
+set background=light
 
-" Move around splits with <c-hjkl>
-nnoremap <c-j> <c-w>j
-nnoremap <c-k> <c-w>k
-nnoremap <c-h> <c-w>h
-nnoremap <c-l> <c-w>l
+let g:pencil_higher_contrast_ui = 0
+let g:pencil_gutter_color = 1
+let g:pencil_terminal_italics = 1
 
-" window splitting mappings
-nnoremap <leader>v :vsplit<CR> <C-w><C-w>
-nnoremap <leader>s :split<CR> <C-w><C-w>
+let &colorcolumn=join(range(81,999),",") " extend column highlight beyond 80
 
-" TagBar
-  let g:tagbar_ctags_bin = "/usr/local/bin/ctags"
-  " https://gist.github.com/Phize/1527856
-  let g:tagbar_type_css = {
-  \ 'ctagstype' : 'Css',
-      \ 'kinds'     : [
-          \ 'c:classes',
-          \ 's:selectors',
-          \ 'i:identities'
-      \ ]
-  \ }
-  " toggle
-  nnoremap <leader>t :TagbarToggle<CR>
+let g:airline_theme = 'pencil'
+let g:airline#extensions#hunks#enabled = 0
+
+nnoremap <c-j> <c-w>j " move down a split
+nnoremap <c-k> <c-w>k " move up a split
+nnoremap <c-h> <c-w>h " move left a split
+nnoremap <c-l> <c-w>l " move right a split
+nnoremap <leader>v :vsplit<CR> <C-w><C-w> " vertical split
+nnoremap <leader>s :split<CR> <C-w><C-w>  " horizontal split
+
+let g:tagbar_ctags_bin = "/usr/local/bin/ctags"
+let g:tagbar_autofocus = 1            " jump to Tagbar when opening
+nnoremap <leader>t :TagbarToggle<CR>  " toggle Tagbar
 
 " sane movement with wrap turned on
 nnoremap j gj
