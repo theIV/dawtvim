@@ -98,6 +98,14 @@ let g:airline#extensions#hunks#enabled = 0
 let g:vim_markdown_folding_disabled = 1
 set conceallevel=3
 
+let g:pencil#wrapModeDefault = 'soft'   " default is 'hard'
+
+augroup pencil
+  autocmd!
+  autocmd FileType markdown,mkd call pencil#init({'wrap': 'hard'})
+  autocmd FileType text         call pencil#init()
+augroup END"
+
 nnoremap <c-j> <c-w>j " move down a split
 nnoremap <c-k> <c-w>k " move up a split
 nnoremap <c-h> <c-w>h " move left a split
