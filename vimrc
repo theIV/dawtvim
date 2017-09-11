@@ -209,7 +209,7 @@ if has("patch-8.0.0238")
     let &t_te .= "\e[?2004l"
     let &pastetoggle = "\e[201~"
 
-    function XTermPasteBegin(ret)
+    function! XTermPasteBegin(ret) abort
       set paste
       return a:ret
     endfunction
