@@ -62,10 +62,8 @@ set wildignore+=.DS_Store " You are the bane of my existence, .DS_Store.
 set wildignore+=tags      " Ignore tag files
 
 " invisibles
-" Show invisible characters
-set list
-" Shortcut to toggle `set list`
-nnoremap <leader>l :set list!<CR>
+
+set list " Show invisible characters
 " These are pretty cute so you can see what's going on
 set lcs=trail:·,tab:▸\ ,eol:¬,extends:>,precedes:<,nbsp:&
 
