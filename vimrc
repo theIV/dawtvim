@@ -95,6 +95,9 @@ let &colorcolumn=join(range(81,999),",") " extend column highlight beyond 80
 let g:airline_theme = 'pencil'
 let g:airline#extensions#hunks#enabled = 0
 
+let g:vim_markdown_folding_disabled = 1
+set conceallevel=3
+
 nnoremap <c-j> <c-w>j " move down a split
 nnoremap <c-k> <c-w>k " move up a split
 nnoremap <c-h> <c-w>h " move left a split
