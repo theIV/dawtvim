@@ -26,6 +26,7 @@ Plug 'chrisbra/csv.vim'
 Plug 'craigemery/vim-autotag'
 Plug 'vimwiki/vimwiki'
 Plug 'christoomey/vim-tmux-navigator'
+Plug 'christoomey/vim-tmux-runner'
 Plug 'janko-m/vim-test'
 Plug 'Valloric/YouCompleteMe'
 call plug#end()
