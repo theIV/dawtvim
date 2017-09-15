@@ -73,15 +73,6 @@ set statusline=%<%f\ (%{&ft})\ %-4(%m%)%=%-19(%3l,%02c%03V%)
 
 compiler ruby
 
-" Only show cursorline in the current window and in normal mode.
-augroup cursorline
-  au!
-  au WinLeave * set nocursorline
-  au WinEnter * set cursorline
-  au InsertEnter * set nocursorline
-  au InsertLeave * set cursorline
-augroup END
-
 " colorschemin'
 colorscheme pencil
 set background=light
