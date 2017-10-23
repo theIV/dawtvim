@@ -83,6 +83,9 @@ let g:pencil_terminal_italics = 1
 
 let &colorcolumn=join(range(81,999),",") " extend column highlight beyond 80
 
+" Remove line numbers & column in Quickfix
+au FileType qf setlocal nonumber colorcolumn=
+
 let g:airline_theme = 'pencil'
 let g:airline#extensions#hunks#enabled = 0
 
