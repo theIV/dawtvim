@@ -30,9 +30,6 @@ set number
 " keep 2 extra lines when scrolling
 set scrolloff=2
 
-" set column so we know when we've reached 80 characters on a line
-set colorcolumn=81
-
 " set leading
 set linespace=3
 
