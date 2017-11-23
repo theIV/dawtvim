@@ -9,7 +9,7 @@ Plug 'scrooloose/nerdcommenter'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-vinegar'
 Plug 'rking/ag.vim'
-"Plug 'Valloric/YouCompleteMe'
+Plug 'Valloric/YouCompleteMe'
 call plug#end()
 
 "Plug 'reedes/vim-pencil'
