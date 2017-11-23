@@ -10,6 +10,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-vinegar'
 Plug 'rking/ag.vim'
 Plug 'Valloric/YouCompleteMe'
+Plug 'fatih/vim-go'
 call plug#end()
 
 "Plug 'reedes/vim-pencil'

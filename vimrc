@@ -169,6 +169,9 @@ runtime macros/matchit.vim
 autocmd BufRead *_spec.rb syn keyword rubyRspec describe context it specify it_should_behave_like before after setup subject
 highlight def link rubyRspec Function
 
+let g:go_fmt_command = "goimports"
+autocmd BufEnter *.go set noexpandtab shiftwidth=8 softtabstop=8
+
 " shortcut for ack
 nnoremap <leader>a :Ag!<space>
 
