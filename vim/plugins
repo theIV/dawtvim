@@ -11,9 +11,9 @@ Plug 'scrooloose/nerdcommenter'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-vinegar'
 Plug 'rking/ag.vim'
-Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer --gocode-completer' }
 call plug#end()
 
+"Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer --gocode-completer' }
 "Plug 'reedes/vim-pencil'
 "Plug 'godlygeek/tabular'
 "Plug 'tpope/vim-haml'
