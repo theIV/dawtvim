@@ -117,17 +117,6 @@ inoremap <esc> <nop>
 " go fullscreen
 nnoremap <leader>f :set invfullscreen<CR>
 
-let g:NERDTreeDirArrowExpandable = '±'
-let g:NERDTreeDirArrowCollapsible = '•'
-" NERDTree
-" janus style
-let NERDTreeDirArrows  = 1
-let NERDTreeMouseMode  = 3
-" hide hidden files...
-let NERDTreeShowHidden = 0
-" shortcut to toggle nerd tree
-noremap <leader>d :execute 'NERDTreeToggle ' . getcwd()<CR>
-
 set statusline+=%#warningmsg#
 "set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
