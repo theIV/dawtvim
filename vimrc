@@ -104,10 +104,6 @@ nnoremap <c-l> <c-w>l " move right a split
 nnoremap <leader>v :vsplit<CR> <C-w><C-w> " vertical split
 nnoremap <leader>s :split<CR> <C-w><C-w>  " horizontal split
 
-let g:tagbar_ctags_bin = "/usr/local/bin/ctags"
-let g:tagbar_autofocus = 1            " jump to Tagbar when opening
-nnoremap <leader>t :TagbarToggle<CR>  " toggle Tagbar
-
 " sane movement with wrap turned on
 nnoremap j gj
 nnoremap k gk
