@@ -114,9 +114,6 @@ vnoremap k gk
 inoremap jk <esc>
 inoremap <esc> <nop>
 
-" go fullscreen
-nnoremap <leader>f :set invfullscreen<CR>
-
 set statusline+=%#warningmsg#
 "set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
