@@ -33,14 +33,6 @@ set scrolloff=2
 " set leading
 set linespace=3
 
-" begone, evil scrollbars
-set go-=T
-set go-=l
-set go-=L
-set go-=r
-set go-=R
-set guioptions-=r
-
 " stfu!
 set visualbell
 
