@@ -93,8 +93,10 @@ nnoremap <c-j> <c-w>j " move down a split
 nnoremap <c-k> <c-w>k " move up a split
 nnoremap <c-h> <c-w>h " move left a split
 nnoremap <c-l> <c-w>l " move right a split
-nnoremap <leader>v :vsplit<CR> <C-w><C-w> " vertical split
-nnoremap <leader>s :split<CR> <C-w><C-w>  " horizontal split
+
+" break the split habit
+nnoremap <leader>v <nop>
+nnoremap <leader>s <nop>
 
 " sane movement with wrap turned on
 nnoremap j gj
