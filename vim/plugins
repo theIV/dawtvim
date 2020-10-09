@@ -1,5 +1,5 @@
-call plug#begin('~/.dawtvim/vim/bundle')
-Plug 'reedes/vim-colors-pencil'
+call plug#begin('~/.vim/bundle')
+Plug 'arcticicestudio/nord-vim'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'tpope/vim-rails'
@@ -11,8 +11,10 @@ Plug 'scrooloose/nerdcommenter'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-vinegar'
 Plug 'rking/ag.vim'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 call plug#end()
 
+"Plug 'reedes/vim-colors-pencil'
 "Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer --gocode-completer' }
 "Plug 'reedes/vim-pencil'
 "Plug 'godlygeek/tabular'
