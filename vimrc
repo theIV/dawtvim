@@ -5,7 +5,8 @@ set nocompatible
 filetype plugin indent on
 syntax enable
 
-"set nocp
+let g:loaded_python_provider = 0
+let g:python3_host_prog = '/Users/theiv/.asdf/shims/python'
 
 source ~/.vim/plugins
 
@@ -63,12 +64,9 @@ set statusline=%<%f\ (%{&ft})\ %-4(%m%)%=%-19(%3l,%02c%03V%)
 compiler ruby
 
 " colorschemin'
-colorscheme pencil
-set background=light
-
-let g:pencil_higher_contrast_ui = 0
-let g:pencil_gutter_color = 1
-let g:pencil_terminal_italics = 1
+" let g:seoul256_background = 237
+" colo seoul256
+colo nord
 
 let &colorcolumn=join(range(81,999),",") " extend column highlight beyond 80
 
@@ -85,7 +83,7 @@ let g:pencil#wrapModeDefault = 'soft'   " default is 'hard'
 
 augroup pencil
   autocmd!
-  autocmd FileType markdown,mkd call pencil#init({'wrap': 'hard'})
+  " autocmd FileType markdown,mkd call pencil#init({'wrap': 'hard'})
   autocmd FileType text         call pencil#init()
 augroup END"
 
@@ -108,6 +106,19 @@ vnoremap k gk
 inoremap jk <esc>
 inoremap <esc> <nop>
 
+" CoC
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+let g:coc_global_extensions = ['coc-solargraph']
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
 set statusline+=%#warningmsg#
 "set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
@@ -115,6 +126,30 @@ set statusline+=%*
 " numbers.vim
 " toggle
 nnoremap <F3> :NumbersToggle<CR>
+
+" Tagbar
+let g:tagbar_ctags_bin = "/usr/local/bin/ctags"
+let g:tagbar_autofocus = 1            " jump to Tagbar when opening
+nnoremap <leader>t :TagbarToggle<CR>  " toggle Tagbar
+
+vnoremap <leader>gh :Gbrowse!<CR>
+
+let g:easytags_async = 1
+set tags=./tags;
+let g:easytags_dynamic_files = 1
+let g:easytags_cmd = '/usr/local/bin/ctags'
+let g:easytags_languages = {
+\   'ruby': {
+\     'ripper-tags': g:easytags_cmd,
+\        'args': [],
+\        'fileoutput_opt': '-f',
+\        'stdout_opt': '-f-',
+\        'recurse_flag': '-R'
+\   }
+\}
+
+" TabNine configuration
+set rtp+=~/.dawtvim/vim/bundle/tabnine-vim
 
 " system clipboard interaction
 " From https://github.com/henrik/dotfiles/blob/master/vim/config/mappings.vim
@@ -145,36 +180,36 @@ runtime macros/matchit.vim
 autocmd BufRead *_spec.rb syn keyword rubyRspec describe context it specify it_should_behave_like before after setup subject
 highlight def link rubyRspec Function
 
+let g:ale_linters = {
+\ 'sh': ['shellcheck'] ,
+\ }
+let g:ale_fixers = {
+  \   'ruby': [
+  \       'rufo',
+  \       'rubocop'
+  \   ],
+  \   'sh': ['shfmt'],
+  \}
+
+" Add space after comment marker inserted by NERDCommenter
+let g:NERDSpaceDelims = 1
+
 let g:go_fmt_command = "goimports"
 autocmd BufEnter *.go set noexpandtab shiftwidth=8 softtabstop=8
 
 " shortcut for ack
 nnoremap <leader>a :Ag!<space>
 
-" swap splits
-" courtesy of sgriffin on stackoverflow
-" http://stackoverflow.com/questions/2586984/how-can-i-swap-positions-of-two-open-files-in-splits-in-vim
-function! MarkWindowSwap()
-    let g:markedWinNum = winnr()
+" use <tab> for trigger completion and navigate to the next complete item
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~ '\s'
 endfunction
 
-function! DoWindowSwap()
-    " Mark destination
-    let curNum = winnr()
-    let curBuf = bufnr( "%" )
-    exe g:markedWinNum . "wincmd w"
-    " Switch to source and shuffle dest->source
-    let markedBuf = bufnr( "%" )
-    " Hide and open so that we aren't prompted and keep history
-    exe 'hide buf' curBuf
-    " Switch to dest and shuffle source->dest
-    exe curNum . "wincmd w"
-    " Hide and open so that we aren't prompted and keep history
-    exe 'hide buf' markedBuf
-endfunction
-
-nmap <silent> <leader>mw :call MarkWindowSwap()<CR>
-nmap <silent> <leader>pw :call DoWindowSwap()<CR>
+inoremap <silent><expr> <Tab>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<Tab>" :
+      \ coc#refresh()
 
 " https://ttssh2.osdn.jp/manual/en/usage/tips/vim.html
 if has("patch-8.0.0238")
